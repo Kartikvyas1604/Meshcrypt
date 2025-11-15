@@ -67,12 +67,12 @@ export class MeshcryptWallet {
   }
 
   private async setupBlockchainAdapters(): Promise<void> {
-    const ethAdapter = new EthereumAdapter(
-      this.config.network,
-      this.config.network === 'mainnet' 
+    const ethAdapter = new EthereumAdapter({
+      network: this.config.network,
+      rpcUrl: this.config.network === 'mainnet' 
         ? 'https://eth.llamarpc.com'
         : 'https://rpc.ankr.com/eth_sepolia'
-    );
+    });
     this.adapters.set('ethereum', ethAdapter);
 
     const zcashAdapter = new ZcashAdapter(

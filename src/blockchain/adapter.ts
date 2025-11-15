@@ -27,10 +27,10 @@ export interface BlockchainEvent {
 }
 
 export abstract class BaseAdapter implements BlockchainAdapter {
-  protected network: 'mainnet' | 'testnet';
+  protected network: 'mainnet' | 'testnet' | 'polygon' | 'arbitrum' | 'optimism' | string;
   protected nodeUrl: string;
 
-  constructor(network: 'mainnet' | 'testnet', nodeUrl: string) {
+  constructor(network: string, nodeUrl: string) {
     this.network = network;
     this.nodeUrl = nodeUrl;
   }
