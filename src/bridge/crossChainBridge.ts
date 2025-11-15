@@ -1,4 +1,5 @@
-
+/* eslint-disable no-console */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 import { ethers } from 'ethers';
 import { sha256 } from '@noble/hashes/sha256';
@@ -183,13 +184,10 @@ export class CrossChainBridge {
       throw new Error(`Provider not found for ${tx.sourceChain}`);
     }
 
-    // Bridge contract ABI
-    const bridgeABI = [
-      'function lockAssets(bytes32 commitment, uint256 amount, uint256 targetChain) external payable',
-    ];
-
-    const bridgeAddress = this.BRIDGE_CONTRACTS[tx.sourceChain];
-    // In production: use actual signer
+    // Bridge contract ABI and address
+    // In production: use actual signer and contract interaction
+    // const bridgeABI = ['function lockAssets(bytes32 commitment, uint256 amount, uint256 targetChain) external payable'];
+    // const bridgeAddress = this.BRIDGE_CONTRACTS[tx.sourceChain];
     // const contract = new ethers.Contract(bridgeAddress, bridgeABI, signer);
 
     // Generate commitment for privacy
@@ -276,9 +274,9 @@ export class CrossChainBridge {
     }
 
     // Bridge contract call with proof
-    const bridgeABI = [
-      'function unlockAssets(bytes32 nullifier, bytes proof, bytes32[] publicSignals) external',
-    ];
+    // In production: actual contract interaction
+    // const bridgeABI = ['function unlockAssets(bytes32 nullifier, bytes proof, bytes32[] publicSignals) external'];
+    // const contract = new ethers.Contract(bridgeAddress, bridgeABI, signer);
 
     // Mock unlock transaction
     tx.unlockTxHash = CryptoUtils.bytesToHex(sha256(
@@ -292,8 +290,8 @@ export class CrossChainBridge {
    * Wait for transaction confirmations
    */
   private async waitForConfirmations(
-    chain: Chain,
-    txHash: string
+    _chain: Chain,
+    _txHash: string
   ): Promise<void> {
     console.log(`[Bridge] Waiting for ${this.config.minConfirmations} confirmations...`);
     
@@ -316,7 +314,7 @@ export class CrossChainBridge {
   async getOptimalRoute(
     sourceChain: Chain,
     targetChain: Chain,
-    amount: string
+    _amount: string
   ): Promise<Chain[]> {
     // Simple direct route for now
     // In production: consider liquidity pools, fees, speed

@@ -38,7 +38,14 @@ interface Asset {
 
 type PrivacyMode = 'public' | 'confidential' | 'shielded';
 
-export default function SendScreen({ navigation }: any) {
+interface SendScreenProps {
+  navigation: {
+    goBack: () => void;
+    navigate: (screen: string, params?: Record<string, unknown>) => void;
+  };
+}
+
+export default function SendScreen({ navigation }: SendScreenProps) {
   // State
   const [selectedAsset, setSelectedAsset] = useState<Asset | null>(null);
   const [recipientAddress, setRecipientAddress] = useState('');
@@ -215,8 +222,9 @@ export default function SendScreen({ navigation }: any) {
         ]
       );
       
-    } catch (error: any) {
-      Alert.alert('Transaction Failed', error.message || 'An error occurred');
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'An error occurred';
+      Alert.alert('Transaction Failed', errorMessage);
     } finally {
       setLoading(false);
     }
