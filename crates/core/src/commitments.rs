@@ -29,8 +29,15 @@ use curve25519_dalek::{
 };
 use serde::{Deserialize, Serialize};
 use sha2::{Sha512, Digest};
-use zeroize::{Zeroize, ZeroizeOnDrop};
+use rand::Rng;
 use crate::{CoreError, Result};
+
+/// Helper function to generate random scalar
+pub fn random_scalar() -> Scalar {
+    let mut bytes = [0u8; 32];
+    rand::thread_rng().fill(&mut bytes);
+    Scalar::from_bytes_mod_order(bytes)
+}
 
 /// Pedersen commitment scheme using Ristretto255
 #[derive(Clone)]
@@ -86,7 +93,7 @@ impl PedersenCommitment {
     ///
     /// Tuple of (Commitment, blinding factor)
     pub fn commit_with_random_blinding(&self, value: u64) -> (Commitment, Scalar) {
-        let blinding = Scalar::random(&mut rand::thread_rng());
+        let blinding = random_scalar();
         let commitment = self.commit(value, &blinding);
         (commitment, blinding)
     }
@@ -199,7 +206,6 @@ impl Commitment {
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct RangeProof {
     /// The proof bytes (typically ~670 bytes for 64-bit range)
-    #[serde(with = "serde_bytes")]
     pub proof_bytes: Vec<u8>,
     
     /// Bit length of the range (e.g., 64 for 64-bit values)
@@ -340,7 +346,7 @@ mod tests {
     fn test_pedersen_commit_and_verify() {
         let pedersen = PedersenCommitment::new();
         let value = 1000u64;
-        let blinding = Scalar::random(&mut rand::thread_rng());
+        let blinding = random_scalar();
         
         let commitment = pedersen.commit(value, &blinding);
         
@@ -349,7 +355,7 @@ mod tests {
         
         // Verify incorrect opening fails
         assert!(!pedersen.verify_opening(&commitment, value + 1, &blinding));
-        assert!(!pedersen.verify_opening(&commitment, value, &Scalar::random(&mut rand::thread_rng())));
+        assert!(!pedersen.verify_opening(&commitment, value, &random_scalar()));
     }
     
     #[test]
@@ -395,7 +401,7 @@ mod tests {
     #[test]
     fn test_range_proof_in_range() {
         let value = 1000u64;
-        let blinding = Scalar::random(&mut rand::thread_rng());
+        let blinding = random_scalar();
         
         let proof = RangeProof::prove(value, &blinding, 64).unwrap();
         
@@ -408,7 +414,7 @@ mod tests {
     #[test]
     fn test_balance_commitment() {
         let balance = 50000u64;
-        let blinding = Scalar::random(&mut rand::thread_rng());
+        let blinding = random_scalar();
         
         let balance_commitment = BalanceCommitment::new(balance, &blinding).unwrap();
         
@@ -423,9 +429,15 @@ mod tests {
         let (input1, b1) = pedersen.commit_with_random_blinding(5000);
         let (input2, b2) = pedersen.commit_with_random_blinding(3000);
         
-        // Output commitments
-        let (output1, b3) = pedersen.commit_with_random_blinding(7000);
-        let (output2, b4) = pedersen.commit_with_random_blinding(1000);
+        // Calculate total input blinding factor
+        let total_blinding_in = b1 + b2;
+        
+        // For outputs, we need to use blinding factors that sum to total_blinding_in
+        let b3 = random_scalar();
+        let b4 = total_blinding_in - b3; // This ensures b3 + b4 = b1 + b2
+        
+        let output1 = pedersen.commit(7000, &b3);
+        let output2 = pedersen.commit(1000, &b4);
         
         // Sum of inputs
         let sum_inputs = PedersenCommitment::add_commitments(&input1, &input2);
@@ -434,11 +446,7 @@ mod tests {
         let sum_outputs = PedersenCommitment::add_commitments(&output1, &output2);
         
         // Verify balance equation: sum(inputs) = sum(outputs)
+        // This should pass because both value and blinding factor sums match
         assert_eq!(sum_inputs.point, sum_outputs.point);
-        
-        // Also verify the blinding factors match
-        let total_blinding_in = b1 + b2;
-        let total_blinding_out = b3 + b4;
-        assert_eq!(total_blinding_in, total_blinding_out);
     }
 }

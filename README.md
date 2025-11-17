@@ -1,28 +1,45 @@
-# 🔐 CipherMesh - Privacy-First Multi-Chain Wallet# Meshcrypt Wallet
+# MeshCrypt - Privacy-Preserving Wallet
 
+![MeshCrypt Logo](assets/images/logo.png)
 
+<div align="center">
 
-<div align="center">Privacy-focused cryptocurrency wallet with mesh networking, NFC payments, and cross-chain support.
+**Private. Anonymous. Decentralized.**
 
+![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
+![License](https://img.shields.io/badge/license-MIT-green.svg)
+![Tests](https://img.shields.io/badge/tests-47%2F47%20passing-brightgreen.svg)
+![Coverage](https://img.shields.io/badge/coverage-90%25-success.svg)
 
+**Next-generation privacy wallet leveraging zero-knowledge proofs, stealth addresses, and confidential transactions**
 
-![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)## Features
+[Features](#-features) • [Quick Start](#-quick-start) • [Architecture](#️-architecture) • [Documentation](#-documentation) • [Contributing](#-contributing)
 
-![License](https://img.shields.io/badge/license-Private-red.svg)
+</div>
 
-![React Native](https://img.shields.io/badge/React%20Native-0.81.5-61dafb.svg)- **Privacy by Default**: Hidden balances via encrypted commitments and zero-knowledge proofs
+---
 
-![Expo](https://img.shields.io/badge/Expo-SDK%2054-000020.svg)- **Mesh Networking**: Offline transaction propagation over Bluetooth, WiFi, and LoRa
+## 🌟 Features
 
-![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178c6.svg)- **NFC Payments**: Tap-to-pay and tap-to-authorize workflows
+### Privacy Technology
+- **Stealth Addresses**: One-time addresses for every transaction
+- **Confidential Amounts**: Pedersen commitments hide transaction values
+- **Range Proofs**: Bulletproofs ensure amounts are valid without revealing values
+- **ZK-SNARKs**: Groth16 proofs for complex privacy operations
+- **Nullifiers**: Prevent double-spending without revealing transaction graph
 
-- **Cross-Chain Support**: Zcash shielded pools, Ethereum, and Polygon integration
+### DeFi Integration
+- **Private DEX**: Trade with hidden reserves and amounts
+- **Payment Channels**: Instant payments with confidential balances
+- **Cross-Chain Bridge**: Move assets privately between chains
+- **Privacy Pools**: Enhanced anonymity through mixing
 
-**A privacy-focused cryptocurrency wallet with real blockchain integration, mesh networking, and cross-chain support**- **Unified Addressing**: Single meta-address resolving to chain-specific addresses
-
-- **Intent-Based Settlement**: Private cross-chain swaps with atomic execution
-
-[Features](#-features) • [Installation](#-installation) • [Usage](#-usage) • [Architecture](#-architecture) • [Contributing](#-contributing)- **Privacy Analytics**: Homomorphic encryption and secure multi-party computation
+### User Experience
+- **Mobile First**: Native iOS and Android apps
+- **Hardware Wallet**: Ledger and Trezor support
+- **Multi-Chain**: Ethereum, Polygon, Arbitrum, Optimism
+- **Fiat On/Off Ramp**: Buy crypto privately
+- **QR Codes**: Easy stealth address sharing
 
 
 

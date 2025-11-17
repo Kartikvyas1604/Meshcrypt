@@ -1,13 +1,14 @@
 
 
 use crate::{CoreError, Result};
-use bip39::{Language, Mnemonic, Seed};
-use bitcoin::bip32::{DerivationPath, ExtendedPrivKey, ExtendedPubKey};
+use bip39::{Language, Mnemonic};
+use bitcoin::bip32::DerivationPath;
 use bitcoin::secp256k1::{Secp256k1, SecretKey, PublicKey};
-use bitcoin::Network;
+use bitcoin::{Network, PrivateKey};
 use serde::{Deserialize, Serialize};
-use zeroize::{Zeroize, ZeroizeOnDrop};
 use std::str::FromStr;
+use hdwallet::{ExtendedPrivKey};
+use rand::Rng;
 
 /// BIP44 coin types
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -44,21 +45,18 @@ impl AccountDerivation {
 }
 
 /// Represents a derived account with keys for multiple chains
-#[derive(Clone, Serialize, Deserialize, ZeroizeOnDrop)]
+#[derive(Clone, Serialize, Deserialize)]
 pub struct Account {
     pub name: String,
     pub index: u32,
     
     #[serde(skip)]
-    #[zeroize(skip)]
     pub ethereum_key: Option<SecretKey>,
     
     #[serde(skip)]
-    #[zeroize(skip)]
     pub solana_key: Option<SecretKey>,
     
     #[serde(skip)]
-    #[zeroize(skip)]
     pub bitcoin_key: Option<SecretKey>,
     
     pub ethereum_address: String,
@@ -69,48 +67,48 @@ pub struct Account {
 }
 
 /// Key Manager - Main interface for HD wallet operations
-#[derive(ZeroizeOnDrop)]
 pub struct KeyManager {
-    #[zeroize(skip)]
     secp: Secp256k1<bitcoin::secp256k1::All>,
-    
     mnemonic: Mnemonic,
-    seed: Seed,
+    seed: Vec<u8>,
     master_key: ExtendedPrivKey,
 }
 
 impl KeyManager {
     /// Create new KeyManager from mnemonic phrase
     pub fn new_from_mnemonic(phrase: &str) -> Result<Self> {
-        let mnemonic = Mnemonic::from_phrase(phrase, Language::English)
+        let mnemonic = Mnemonic::parse_in_normalized(Language::English, phrase)
             .map_err(|e| CoreError::InvalidMnemonic(e.to_string()))?;
         
-        let seed = Seed::new(&mnemonic, "");
+        let seed = mnemonic.to_seed("");
         let secp = Secp256k1::new();
         
-        let master_key = ExtendedPrivKey::new_master(Network::Bitcoin, seed.as_bytes())
+        let master_key = ExtendedPrivKey::with_seed(&seed)
             .map_err(|e| CoreError::KeyDerivation(e.to_string()))?;
         
         Ok(Self {
             secp,
             mnemonic,
-            seed,
+            seed: seed.to_vec(),
             master_key,
         })
     }
     
     /// Generate new random mnemonic (24 words)
     pub fn generate_mnemonic() -> Result<String> {
-        let mut rng = rand::thread_rng();
-        let mnemonic = Mnemonic::generate_in_with(&mut rng, Language::English, 24)
+        // Generate 32 bytes of entropy for 24 words
+        let mut entropy = [0u8; 32];
+        rand::thread_rng().fill(&mut entropy);
+        
+        let mnemonic = Mnemonic::from_entropy(&entropy)
             .map_err(|e| CoreError::InvalidMnemonic(e.to_string()))?;
         
-        Ok(mnemonic.phrase().to_string())
+        Ok(mnemonic.to_string())
     }
     
     /// Get mnemonic phrase (for backup purposes)
     pub fn get_mnemonic(&self) -> String {
-        self.mnemonic.phrase().to_string()
+        self.mnemonic.to_string()
     }
     
     /// Derive account for specific index
@@ -156,12 +154,28 @@ impl KeyManager {
             address_index: index,
         };
         
-        let path = derivation.to_path()?;
-        let derived = self.master_key
-            .derive_priv(&self.secp, &path)
+        // Use hdwallet to derive keys
+        // m/44'/coin_type'/account'/change/index
+        let mut key = self.master_key.clone();
+        
+        // Derive each level
+        key = key.derive_private_key(hdwallet::KeyIndex::hardened_from_normalize_index(44).unwrap())
+            .map_err(|e| CoreError::KeyDerivation(e.to_string()))?;
+        key = key.derive_private_key(hdwallet::KeyIndex::hardened_from_normalize_index(coin_type as u32).unwrap())
+            .map_err(|e| CoreError::KeyDerivation(e.to_string()))?;
+        key = key.derive_private_key(hdwallet::KeyIndex::hardened_from_normalize_index(account).unwrap())
+            .map_err(|e| CoreError::KeyDerivation(e.to_string()))?;
+        key = key.derive_private_key(hdwallet::KeyIndex::Normal(change))
+            .map_err(|e| CoreError::KeyDerivation(e.to_string()))?;
+        key = key.derive_private_key(hdwallet::KeyIndex::Normal(index))
             .map_err(|e| CoreError::KeyDerivation(e.to_string()))?;
         
-        Ok(derived.private_key)
+        // hdwallet's ExtendedPrivKey wraps a SecretKey
+        // Convert hdwallet::SecretKey to bitcoin::secp256k1::SecretKey
+        let hdwallet_key = &key.private_key;
+        let secret_bytes = hdwallet_key.secret_bytes();
+        SecretKey::from_slice(&secret_bytes)
+            .map_err(|e| CoreError::KeyDerivation(e.to_string()))
     }
     
     /// Generate Ethereum-compatible address from private key
@@ -191,7 +205,8 @@ impl KeyManager {
         use bitcoin::Address;
         use bitcoin::PublicKey as BtcPubKey;
         
-        let public_key = BtcPubKey::from_secret_key(&self.secp, &key.into());
+        let btc_private = PrivateKey::new(*key, Network::Bitcoin);
+        let public_key = BtcPubKey::from_private_key(&self.secp, &btc_private);
         let address = Address::p2wpkh(&public_key, Network::Bitcoin)
             .expect("Failed to create address");
         
@@ -229,7 +244,7 @@ impl KeyManager {
         
         use sha2::Digest;
         let hash = sha2::Sha256::digest(message);
-        let msg = bitcoin::secp256k1::Message::from_slice(&hash)
+        let msg = bitcoin::secp256k1::Message::from_digest_slice(&hash)
             .map_err(|e| CoreError::Crypto(e.to_string()))?;
         
         let signature = self.secp.sign_ecdsa(&msg, &key);

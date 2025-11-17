@@ -1,9 +1,9 @@
 [workspace]
 members = [
     "crates/core",
-    "crates/meshnet",
-    "crates/nfc",
-    "crates/zk",
+    # "crates/meshnet",  # TODO: Coming in Sprint 3
+    # "crates/nfc",      # TODO: Coming in Sprint 4
+    # "crates/zk",       # TODO: Coming in Sprint 2
 ]
 resolver = "2"
 

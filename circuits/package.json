@@ -1,0 +1,38 @@
+{
+  "name": "meshcrypt-circuits",
+  "version": "1.0.0",
+  "description": "Zero-knowledge circuits for MeshCrypt privacy wallet",
+  "scripts": {
+    "compile": "npm run compile:all",
+    "compile:all": "npm run compile:transfer && npm run compile:stealth && npm run compile:range && npm run compile:merkle && npm run compile:swap && npm run compile:nullifier",
+    "compile:transfer": "circom circom/confidential_transfer.circom --r1cs --wasm --sym -o build/transfer",
+    "compile:stealth": "circom circom/stealth_address.circom --r1cs --wasm --sym -o build/stealth",
+    "compile:range": "circom circom/range_proof.circom --r1cs --wasm --sym -o build/range",
+    "compile:merkle": "circom circom/merkle_membership.circom --r1cs --wasm --sym -o build/merkle",
+    "compile:swap": "circom circom/private_swap.circom --r1cs --wasm --sym -o build/swap",
+    "compile:nullifier": "circom circom/nullifier.circom --r1cs --wasm --sym -o build/nullifier",
+    "setup": "npm run setup:all",
+    "setup:all": "npm run setup:transfer && npm run setup:stealth && npm run setup:range && npm run setup:merkle && npm run setup:swap && npm run setup:nullifier",
+    "setup:transfer": "snarkjs groth16 setup build/transfer/confidential_transfer.r1cs powersOfTau28_hez_final_16.ptau build/transfer/circuit_0000.zkey",
+    "setup:stealth": "snarkjs groth16 setup build/stealth/stealth_address.r1cs powersOfTau28_hez_final_16.ptau build/stealth/circuit_0000.zkey",
+    "setup:range": "snarkjs groth16 setup build/range/range_proof.r1cs powersOfTau28_hez_final_16.ptau build/range/circuit_0000.zkey",
+    "setup:merkle": "snarkjs groth16 setup build/merkle/merkle_membership.r1cs powersOfTau28_hez_final_16.ptau build/merkle/circuit_0000.zkey",
+    "setup:swap": "snarkjs groth16 setup build/swap/private_swap.r1cs powersOfTau28_hez_final_16.ptau build/swap/circuit_0000.zkey",
+    "setup:nullifier": "snarkjs groth16 setup build/nullifier/nullifier.r1cs powersOfTau28_hez_final_16.ptau build/nullifier/circuit_0000.zkey",
+    "test": "node test/test_circuits.js"
+  },
+  "keywords": [
+    "zero-knowledge",
+    "zk-snark",
+    "privacy",
+    "circom",
+    "cryptocurrency"
+  ],
+  "author": "MeshCrypt Team",
+  "license": "MIT",
+  "devDependencies": {
+    "circomlib": "^2.0.5",
+    "snarkjs": "^0.7.0",
+    "circom_tester": "^0.0.19"
+  }
+}

@@ -3,17 +3,15 @@
 //! Core cryptographic operations: hashing, encryption, signing, and key exchange.
 
 use aes_gcm::{
-    aead::{Aead, KeyInit, OsRng as AesOsRng},
+    aead::{Aead, KeyInit},
     Aes256Gcm, Nonce,
 };
 use chacha20poly1305::{
-    aead::{Aead as ChaChaAead, KeyInit as ChaChaKeyInit},
     ChaCha20Poly1305, Key as ChaChaKey,
 };
 use sha2::{Sha256, Sha512, Digest};
 use blake2::{Blake2b512, Blake2s256};
 use rand::Rng;
-use zeroize::{Zeroize, ZeroizeOnDrop};
 use crate::{CoreError, Result};
 
 /// Hash a message using SHA-256
@@ -45,7 +43,6 @@ pub fn blake2s(data: &[u8]) -> [u8; 32] {
 }
 
 /// AES-256-GCM encryption
-#[derive(ZeroizeOnDrop)]
 pub struct AesGcmCipher {
     cipher: Aes256Gcm,
 }
@@ -97,7 +94,6 @@ impl AesGcmCipher {
 }
 
 /// ChaCha20-Poly1305 encryption (faster than AES on platforms without hardware acceleration)
-#[derive(ZeroizeOnDrop)]
 pub struct ChaCha20Cipher {
     cipher: ChaCha20Poly1305,
 }
@@ -165,7 +161,7 @@ pub fn argon2_derive_key(
     salt: &[u8],
 ) -> Result<[u8; 32]> {
     use argon2::{Argon2, PasswordHasher};
-    use argon2::password_hash::{SaltString, PasswordHash};
+    use argon2::password_hash::SaltString;
     
     let salt_string = SaltString::encode_b64(salt)
         .map_err(|e| CoreError::Crypto(format!("Invalid salt: {}", e)))?;
@@ -175,12 +171,14 @@ pub fn argon2_derive_key(
         .hash_password(password, &salt_string)
         .map_err(|e| CoreError::Crypto(format!("Key derivation failed: {}", e)))?;
     
-    let hash_bytes = hash.hash
-        .ok_or_else(|| CoreError::Crypto("No hash produced".into()))?
-        .as_bytes();
+    // Extract hash from the string representation
+    let hash_output = hash.hash
+        .ok_or_else(|| CoreError::Crypto("No hash produced".into()))?;
     
     let mut key = [0u8; 32];
-    key.copy_from_slice(&hash_bytes[..32]);
+    let hash_bytes = hash_output.as_bytes();
+    let copy_len = hash_bytes.len().min(32);
+    key[..copy_len].copy_from_slice(&hash_bytes[..copy_len]);
     Ok(key)
 }
 
@@ -208,10 +206,15 @@ pub mod stealth {
     impl StealthKeypair {
         /// Generate a new stealth keypair
         pub fn generate() -> Self {
-            let spend_private = Scalar::random(&mut rand::thread_rng());
+            let mut spend_bytes = [0u8; 32];
+            let mut view_bytes = [0u8; 32];
+            rand::thread_rng().fill(&mut spend_bytes);
+            rand::thread_rng().fill(&mut view_bytes);
+            
+            let spend_private = Scalar::from_bytes_mod_order(spend_bytes);
             let spend_public = spend_private * G;
             
-            let view_private = Scalar::random(&mut rand::thread_rng());
+            let view_private = Scalar::from_bytes_mod_order(view_bytes);
             let view_public = view_private * G;
             
             StealthKeypair {
@@ -228,7 +231,9 @@ pub mod stealth {
             recipient_view_public: &RistrettoPoint,
         ) -> (RistrettoPoint, RistrettoPoint, Scalar) {
             // Generate ephemeral keypair
-            let ephemeral_private = Scalar::random(&mut rand::thread_rng());
+            let mut ephemeral_bytes = [0u8; 32];
+            rand::thread_rng().fill(&mut ephemeral_bytes);
+            let ephemeral_private = Scalar::from_bytes_mod_order(ephemeral_bytes);
             let ephemeral_public = ephemeral_private * G;
             
             // Compute shared secret: σ = r·V

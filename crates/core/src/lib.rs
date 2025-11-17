@@ -1,35 +1,9 @@
-//! MeshCrypt Core Library
-//!
-//! Production-grade privacy-first cryptocurrency wallet core.
-//! Implements HD wallet, Pedersen commitments, stealth addresses, and encrypted storage.
-//!
-//! # Security
-//!
-//! - All sensitive data is zeroized on drop
-//! - Keys stored encrypted with AES-256-GCM
-//! - Uses hardware-backed keystores where available
-//! - Audited cryptographic primitives from curve25519-dalek
-//!
-//! # Architecture
-//!
-//! ```text
-//! KeyManager → WalletState → TransactionBuilder → ProofManager
-//!     ↓            ↓               ↓
-//! Commitments  Storage        ZK Proofs
-//! ```
-
 pub mod commitments;
 pub mod crypto;
 pub mod key_manager;
 pub mod storage;
 pub mod transaction_builder;
 pub mod wallet_state;
-
-// Re-exports
-pub use commitments::{PedersenCommitment, RangeProof};
-pub use key_manager::{KeyManager, Account, AccountDerivation};
-pub use transaction_builder::{TransactionBuilder, PrivateTransaction};
-pub use wallet_state::{WalletState, EncryptedState};
 
 use thiserror::Error;
 
@@ -61,7 +35,16 @@ pub enum CoreError {
     InvalidParameter(String),
 }
 
-/// Version information
+// Re-export main types
+pub use commitments::{PedersenCommitment, Commitment, RangeProof, BalanceCommitment, random_scalar};
+pub use key_manager::{KeyManager, Account, CoinType, AccountDerivation};
+pub use crypto::{AesGcmCipher, ChaCha20Cipher, sha256, blake2b};
+pub use crypto::stealth::{StealthMasterKey, StealthAddress, StealthTransaction, StealthScanner};
+pub use storage::{EncryptedDb, StoredAccount, StoredTransaction, StealthOutput};
+pub use transaction_builder::{TransactionBuilder, PrivateTransaction, UTXO};
+pub use wallet_state::{WalletState, TransactionRecord, ExportedKeys, WalletStatistics};
+
+// Version info
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");
 pub const AUTHORS: &str = env!("CARGO_PKG_AUTHORS");
 
