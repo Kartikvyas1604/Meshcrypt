@@ -1,4 +1,6 @@
-import * as bip39 from 'bip39';
+import { generateMnemonic, mnemonicToSeedSync, validateMnemonic } from '@scure/bip39';
+// @ts-expect-error - TypeScript may not resolve this import correctly but it works at runtime
+import { wordlist } from '@scure/bip39/wordlists/english';
 import { CryptoUtils } from '../utils/crypto';
 import { HDNode, KeyPair } from '../types';
 
@@ -8,15 +10,15 @@ export class KeyManager {
   private encryptionKey?: Uint8Array;
 
   async generateMnemonic(strength: number = 256): Promise<string> {
-    return bip39.generateMnemonic(strength);
+    return generateMnemonic(wordlist, strength);
   }
 
   async initializeFromMnemonic(mnemonic: string, passphrase: string = ''): Promise<void> {
-    if (!bip39.validateMnemonic(mnemonic)) {
+    if (!validateMnemonic(mnemonic, wordlist)) {
       throw new Error('Invalid mnemonic phrase');
     }
 
-    const seed = await bip39.mnemonicToSeed(mnemonic, passphrase);
+    const seed = mnemonicToSeedSync(mnemonic, passphrase);
     this.masterSeed = new Uint8Array(seed);
     
     // For now, we'll skip bip32 until we resolve the dependency

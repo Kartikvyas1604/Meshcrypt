@@ -16,6 +16,7 @@ import CreateWalletScreen from '../screens/CreateWalletScreen';
 import VerifySeedPhraseScreen from '../screens/VerifySeedPhraseScreen';
 import ImportWalletScreen from '../screens/ImportWalletScreen';
 import ImportPrivateKeyScreen from '../screens/ImportPrivateKeyScreen';
+import SettingsScreen from '../screens/SettingsScreen';
 
 export type RootStackParamList = {
   WalletSetup: undefined;
@@ -27,6 +28,7 @@ export type RootStackParamList = {
   Send: undefined;
   Receive: undefined;
   Swap: undefined;
+  Settings: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -71,6 +73,7 @@ export default function AppNavigator() {
       <Stack.Screen name="Send" component={SendScreen} />
       <Stack.Screen name="Receive" component={ReceiveScreen} />
       <Stack.Screen name="Swap" component={SwapScreen} />
+      <Stack.Screen name="Settings" component={SettingsScreen} />
     </Stack.Navigator>
   );
 }

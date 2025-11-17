@@ -3,29 +3,16 @@
  * Supports: Zcash, Ethereum, Polygon, Solana, Bitcoin
  */
 
-import * as bip39 from 'bip39';
+import { generateMnemonic, mnemonicToSeedSync, validateMnemonic } from '@scure/bip39';
+// @ts-expect-error - TypeScript may not resolve this import correctly but it works at runtime
+import { wordlist } from '@scure/bip39/wordlists/english';
 import { HDKey } from '@scure/bip32';
-import * as ed25519 from '@noble/ed25519';
+import { ed25519 } from '@noble/curves/ed25519';
 import { sha256 } from '@noble/hashes/sha256';
-import { sha512 } from '@noble/hashes/sha512';
 import { keccak_256 } from '@noble/hashes/sha3';
-import { pbkdf2 } from '@noble/hashes/pbkdf2';
 import bs58 from 'bs58';
 import { Buffer } from 'buffer';
 import { Logger } from '../utils/logger';
-
-// Configure crypto functions for bip39
-bip39.setDefaultWordlist('english');
-// @ts-ignore - bip39 expects node crypto but we provide compatible functions
-bip39.mnemonicToSeedSync = (mnemonic: string, password?: string) => {
-  const mnemonicBuffer = Buffer.from(bip39.mnemonicToEntropy(mnemonic), 'hex');
-  const salt = 'mnemonic' + (password || '');
-  return Buffer.from(pbkdf2(sha512, mnemonicBuffer, salt, { c: 2048, dkLen: 64 }));
-};
-// @ts-ignore
-bip39.mnemonicToSeed = async (mnemonic: string, password?: string) => {
-  return bip39.mnemonicToSeedSync(mnemonic, password);
-};
 
 export enum ChainType {
   ZCASH = 'Zcash',
@@ -62,13 +49,13 @@ export class MeshcryptWalletCore {
     try {
       Logger.info('Starting wallet creation...');
       
-      // Generate 24-word BIP39 mnemonic
-      const mnemonic = bip39.generateMnemonic(256); // 256 bits = 24 words
+      // Generate 24-word BIP39 mnemonic using @scure/bip39
+      const mnemonic = generateMnemonic(wordlist, 256); // 256 bits = 24 words
       Logger.debug('Generated mnemonic:', mnemonic.split(' ').length + ' words');
       
-      // Derive master key using BIP32
-      const seed = await bip39.mnemonicToSeed(mnemonic);
-      const masterKey = HDKey.fromMasterSeed(Buffer.from(seed));
+      // Derive master key using BIP32 - use Sync version to avoid Web Crypto dependency
+      const seed = mnemonicToSeedSync(mnemonic);
+      const masterKey = HDKey.fromMasterSeed(seed);
 
       // Derive accounts for all chains
       const accounts: Account[] = [];
@@ -83,7 +70,7 @@ export class MeshcryptWalletCore {
       accounts.push(await this.derivePolygonAccount(masterKey));
       
       // Solana
-      accounts.push(await this.deriveSolanaAccount(masterKey));
+      accounts.push(this.deriveSolanaAccount(masterKey));
       
       // Bitcoin
       accounts.push(await this.deriveBitcoinAccount(masterKey));
@@ -102,6 +89,10 @@ export class MeshcryptWalletCore {
       return this.walletData;
     } catch (error) {
       Logger.error('Wallet creation error:', error);
+      // Log full stack trace for debugging
+      if (error instanceof Error && error.stack) {
+        Logger.error('Stack trace:', error.stack);
+      }
       throw new Error(`Failed to create wallet: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
@@ -117,23 +108,23 @@ export class MeshcryptWalletCore {
       const normalizedMnemonic = mnemonic.trim().replace(/\s+/g, ' ');
       Logger.debug('Normalized mnemonic:', normalizedMnemonic.split(' ').length + ' words');
       
-      // Validate mnemonic
-      if (!bip39.validateMnemonic(normalizedMnemonic)) {
+      // Validate mnemonic using @scure/bip39
+      if (!validateMnemonic(normalizedMnemonic, wordlist)) {
         Logger.error('Invalid mnemonic validation failed');
         throw new Error('Invalid recovery phrase');
       }
       
       Logger.info('Mnemonic validated successfully');
 
-      // Derive from existing seed phrase
-      const seed = await bip39.mnemonicToSeed(normalizedMnemonic);
-      const masterKey = HDKey.fromMasterSeed(Buffer.from(seed));
+      // Derive from existing seed phrase - use Sync version
+      const seed = mnemonicToSeedSync(normalizedMnemonic);
+      const masterKey = HDKey.fromMasterSeed(seed);
 
       const accounts: Account[] = [];
       accounts.push(await this.deriveZcashAccount(masterKey));
       accounts.push(await this.deriveEthereumAccount(masterKey));
       accounts.push(await this.derivePolygonAccount(masterKey));
-      accounts.push(await this.deriveSolanaAccount(masterKey));
+      accounts.push(this.deriveSolanaAccount(masterKey));
       accounts.push(await this.deriveBitcoinAccount(masterKey));
 
       const unifiedAddress = this.generateUnifiedAddress(accounts);
@@ -234,15 +225,15 @@ export class MeshcryptWalletCore {
     };
   }
 
-  private async deriveSolanaAccount(masterKey: HDKey): Promise<Account> {
+  private deriveSolanaAccount(masterKey: HDKey): Account {
     // BIP44: m/44'/501'/0'/0/0 (501 is Solana coin type)
     const path = "m/44'/501'/0'/0/0";
     const child = masterKey.derive(path);
     
     const privateKey = Buffer.from(child.privateKey!).toString('hex');
     
-    // Solana uses Ed25519
-    const publicKeyBytes = await ed25519.getPublicKey(child.privateKey!);
+    // Solana uses Ed25519 - use @noble/curves which doesn't need hash config
+    const publicKeyBytes = ed25519.getPublicKey(child.privateKey!);
     const publicKey = Buffer.from(publicKeyBytes).toString('hex');
     
     // Base58 encode for Solana address
