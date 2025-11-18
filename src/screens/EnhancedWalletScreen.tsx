@@ -44,7 +44,7 @@ const EnhancedWalletScreen: React.FC<Props> = ({ navigation }) => {
       setIsLoading(true);
 
       // Check if wallet exists
-      const encryptedWallet = await AsyncStorage.getItem('meshcrypt_wallet');
+      const encryptedWallet = await AsyncStorage.getItem('Zetaris_wallet');
       if (!encryptedWallet) {
         navigation.replace('WalletSetup');
         return;
@@ -133,7 +133,7 @@ const EnhancedWalletScreen: React.FC<Props> = ({ navigation }) => {
       {/* Header */}
       <View style={styles.header}>
         <View>
-          <Text style={styles.headerTitle}>Meshcrypt</Text>
+          <Text style={styles.headerTitle}>Zetaris</Text>
           <Text style={styles.headerSubtitle}>
             {activeAccount?.name || 'Account 1'}
           </Text>

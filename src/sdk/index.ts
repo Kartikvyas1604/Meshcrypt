@@ -1,5 +1,5 @@
 /**
- * Meshcrypt Wallet SDK
+ * Zetaris Wallet SDK
  * 
  * Complete developer SDK for integrating privacy-preserving
  * cryptocurrency functionality into applications.
@@ -12,7 +12,7 @@
  * - NFC payments
  * - Analytics queries
  * 
- * Based on Meshcrypt specification Layer 7
+ * Based on Zetaris specification Layer 7
  */
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
@@ -82,12 +82,12 @@ export interface WalletInfo {
 }
 
 /**
- * Meshcrypt SDK
+ * Zetaris SDK
  * 
  * Main entry point for developers to integrate privacy-preserving
  * wallet functionality
  */
-export class MeshcryptSDK {
+export class ZetarisSDK {
   private wallet: Wallet;
   private bridge?: CrossChainBridge;
   private analytics?: PrivacyAnalyticsEngine;
@@ -112,7 +112,7 @@ export class MeshcryptSDK {
       targetChain: Chain.Polygon,
       privacyMode: 'shielded',
       minConfirmations: 12,
-      relayerEndpoint: 'https://relayer.Meshcrypt.io',
+      relayerEndpoint: 'https://relayer.Zetaris.io',
     });
 
     // Privacy analytics
@@ -445,7 +445,7 @@ export class MeshcryptSDK {
 /**
  * Create SDK instance with default configuration
  */
-export function createMeshcryptSDK(config?: Partial<SDKConfig>): MeshcryptSDK {
+export function createZetarisSDK(config?: Partial<SDKConfig>): ZetarisSDK {
   const defaultConfig: SDKConfig = {
     network: 'mainnet',
     enableMeshNetwork: true,
@@ -454,14 +454,14 @@ export function createMeshcryptSDK(config?: Partial<SDKConfig>): MeshcryptSDK {
     privacyLevel: 'high',
   };
 
-  return new MeshcryptSDK({ ...defaultConfig, ...config });
+  return new ZetarisSDK({ ...defaultConfig, ...config });
 }
 
 /**
  * Create SDK instance for testing
  */
-export function createTestnetSDK(): MeshcryptSDK {
-  return createMeshcryptSDK({
+export function createTestnetSDK(): ZetarisSDK {
+  return createZetarisSDK({
     network: 'testnet',
     privacyLevel: 'medium',
   });

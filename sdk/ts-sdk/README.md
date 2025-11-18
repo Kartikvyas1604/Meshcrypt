@@ -1,44 +1,44 @@
-# MeshCrypt TypeScript SDK
+# Zetaris TypeScript SDK
 
 Privacy-preserving wallet SDK for React Native with ZK-SNARKs, stealth addresses, and confidential transactions.
 
 ## Installation
 
 ```bash
-npm install @meshcrypt/sdk
+npm install @Zetaris/sdk
 # or
-yarn add @meshcrypt/sdk
+yarn add @Zetaris/sdk
 ```
 
 ## Quick Start
 
 ```typescript
-import { MeshcryptSDK, MeshcryptUtils } from '@meshcrypt/sdk';
+import { ZetarisSDK, ZetarisUtils } from '@Zetaris/sdk';
 
 // Generate mnemonic
-const mnemonic = await MeshcryptSDK.generateMnemonic();
+const mnemonic = await ZetarisSDK.generateMnemonic();
 
 // Create wallet
-const wallet = await MeshcryptSDK.createWallet(mnemonic, 'password123');
+const wallet = await ZetarisSDK.createWallet(mnemonic, 'password123');
 
 // Get wallet info
-const info = await MeshcryptSDK.getWalletInfo(wallet);
+const info = await ZetarisSDK.getWalletInfo(wallet);
 console.log('Address:', info.address);
 console.log('Balance:', info.balance);
 
 // Generate stealth address for receiving
-const stealthAddress = await MeshcryptSDK.generateStealthAddress(wallet);
+const stealthAddress = await ZetarisSDK.generateStealthAddress(wallet);
 console.log('Stealth address:', stealthAddress.address);
 
 // Create confidential transaction
-const tx = await MeshcryptSDK.createTransaction(
+const tx = await ZetarisSDK.createTransaction(
   wallet,
   '0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb',
   1000000000 // 1 ETH in wei
 );
 
 // Sign transaction
-const signature = await MeshcryptSDK.signTransaction(wallet, tx);
+const signature = await ZetarisSDK.signTransaction(wallet, tx);
 console.log('Signature:', signature);
 ```
 
@@ -48,52 +48,52 @@ console.log('Signature:', signature);
 
 ```typescript
 // Generate mnemonic
-const mnemonic = await MeshcryptSDK.generateMnemonic();
+const mnemonic = await ZetarisSDK.generateMnemonic();
 
 // Create wallet
-const wallet = await MeshcryptSDK.createWallet(mnemonic, 'password');
+const wallet = await ZetarisSDK.createWallet(mnemonic, 'password');
 
 // Import from private key
-const imported = await MeshcryptSDK.importPrivateKey(privateKey, 'password');
+const imported = await ZetarisSDK.importPrivateKey(privateKey, 'password');
 
 // Export keys
-const privateKey = await MeshcryptSDK.exportPrivateKey(wallet, 0);
-const viewKey = await MeshcryptSDK.exportViewKey(wallet);
+const privateKey = await ZetarisSDK.exportPrivateKey(wallet, 0);
+const viewKey = await ZetarisSDK.exportViewKey(wallet);
 ```
 
 ### Privacy Features
 
 ```typescript
 // Generate stealth address
-const stealthAddress = await MeshcryptSDK.generateStealthAddress(wallet);
+const stealthAddress = await ZetarisSDK.generateStealthAddress(wallet);
 
 // Create Pedersen commitment
-const blinding = MeshcryptUtils.generateBlindingFactor();
-const commitment = await MeshcryptSDK.createCommitment(1000, blinding);
+const blinding = ZetarisUtils.generateBlindingFactor();
+const commitment = await ZetarisSDK.createCommitment(1000, blinding);
 
 // Create range proof
-const rangeProof = await MeshcryptSDK.createRangeProof(
+const rangeProof = await ZetarisSDK.createRangeProof(
   commitment,
   1000,
   blinding
 );
 
 // Verify range proof
-const isValid = await MeshcryptSDK.verifyRangeProof(rangeProof, commitment);
+const isValid = await ZetarisSDK.verifyRangeProof(rangeProof, commitment);
 ```
 
 ### ZK-SNARK Proofs
 
 ```typescript
 // Generate ZK proof
-const proof = await MeshcryptSDK.generateZkProof({
+const proof = await ZetarisSDK.generateZkProof({
   publicInputs: new Uint8Array([1, 2, 3]),
   privateInputs: new Uint8Array([4, 5, 6]),
   circuitType: 'confidential_transfer',
 });
 
 // Verify ZK proof
-const isValid = await MeshcryptSDK.verifyZkProof(
+const isValid = await ZetarisSDK.verifyZkProof(
   proof,
   new Uint8Array([1, 2, 3])
 );
@@ -103,22 +103,22 @@ const isValid = await MeshcryptSDK.verifyZkProof(
 
 ```typescript
 // Create transaction
-const tx = await MeshcryptSDK.createTransaction(
+const tx = await ZetarisSDK.createTransaction(
   wallet,
   recipientAddress,
   amount
 );
 
 // Sign transaction
-const signature = await MeshcryptSDK.signTransaction(wallet, tx);
+const signature = await ZetarisSDK.signTransaction(wallet, tx);
 
 // Verify transaction
-const isValid = await MeshcryptSDK.verifyTransaction(tx);
+const isValid = await ZetarisSDK.verifyTransaction(tx);
 ```
 
 ## API Reference
 
-### MeshcryptSDK
+### ZetarisSDK
 
 #### Static Methods
 
@@ -138,7 +138,7 @@ const isValid = await MeshcryptSDK.verifyTransaction(tx);
 - `exportViewKey(handle: WalletHandle): Promise<string>` - Export view key
 - `importPrivateKey(privateKey: string, password: string): Promise<WalletHandle>` - Import from private key
 
-### MeshcryptUtils
+### ZetarisUtils
 
 #### Static Methods
 
@@ -206,12 +206,12 @@ interface ZkProof {
 ## Error Handling
 
 ```typescript
-import { MeshcryptError } from '@meshcrypt/sdk';
+import { ZetarisError } from '@Zetaris/sdk';
 
 try {
-  const wallet = await MeshcryptSDK.createWallet(mnemonic, password);
+  const wallet = await ZetarisSDK.createWallet(mnemonic, password);
 } catch (error) {
-  if (error instanceof MeshcryptError) {
+  if (error instanceof ZetarisError) {
     console.error('Error code:', error.code);
     console.error('Message:', error.message);
   }
@@ -222,8 +222,8 @@ try {
 
 ```bash
 # Clone repository
-git clone https://github.com/meshcrypt/meshcrypt.git
-cd meshcrypt/sdk/ts-sdk
+git clone https://github.com/Zetaris/Zetaris.git
+cd Zetaris/sdk/ts-sdk
 
 # Install dependencies
 npm install
@@ -249,7 +249,7 @@ Add to `android/app/build.gradle`:
 
 ```gradle
 dependencies {
-    implementation project(':meshcrypt-ffi')
+    implementation project(':Zetaris-ffi')
 }
 ```
 
@@ -263,4 +263,4 @@ Contributions welcome! Please see CONTRIBUTING.md
 
 ## Security
 
-Report security issues to security@meshcrypt.io
+Report security issues to security@Zetaris.io

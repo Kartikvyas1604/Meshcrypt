@@ -14,7 +14,7 @@ import {
   Alert,
   Clipboard,
 } from 'react-native';
-import { MeshcryptWalletCore } from '../core/meshcryptWalletCore';
+import { ZetarisWalletCore } from '../core/ZetarisWalletCore';
 
 interface CreateWalletScreenProps {
   navigation: {
@@ -35,7 +35,7 @@ export default function CreateWalletScreen({ navigation }: CreateWalletScreenPro
 
   const generateWallet = async () => {
     try {
-      const walletCore = new MeshcryptWalletCore();
+      const walletCore = new ZetarisWalletCore();
       const wallet = await walletCore.createWallet();
       setSeedPhrase(wallet.seedPhrase);
       setWords(wallet.seedPhrase.split(' '));

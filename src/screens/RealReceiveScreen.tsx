@@ -1,6 +1,6 @@
 /**
  * Real Receive Screen - Show addresses and QR codes for receiving
- * Based on Meshcrypt specification from prompt.txt
+ * Based on Zetaris specification from prompt.txt
  * Supports: ETH, MATIC, SOL, BTC, ZEC
  */
 

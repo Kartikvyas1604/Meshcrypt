@@ -1,6 +1,6 @@
-# MeshCrypt ZK-SNARK Circuits
+# Zetaris ZK-SNARK Circuits
 
-Zero-knowledge proof circuits for privacy-preserving transactions in the MeshCrypt wallet.
+Zero-knowledge proof circuits for privacy-preserving transactions in the Zetaris wallet.
 
 ## Circuits Overview
 
@@ -126,7 +126,7 @@ const isValid = await groth16.verify(vkey, publicSignals, proof);
 The circuits are designed to work with the Rust core library's commitment scheme:
 
 ```rust
-use meshcrypt_core::commitments::PedersenCommitment;
+use Zetaris_core::commitments::PedersenCommitment;
 
 let pc = PedersenCommitment::new();
 let (commitment, blinding) = pc.commit_with_random_blinding(1000);

@@ -1,5 +1,5 @@
 {
-  "name": "meshcrypt",
+  "name": "Zetaris",
   "version": "1.0.0",
   "description": "Privacy-focused cryptocurrency wallet with mesh networking and cross-chain support",
   "main": "index.ts",

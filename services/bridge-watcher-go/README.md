@@ -1,4 +1,4 @@
-# MeshCrypt Bridge Watcher
+# Zetaris Bridge Watcher
 
 Go service for monitoring cross-chain bridge events and relaying transactions with privacy preservation.
 
@@ -97,10 +97,10 @@ go build -o bin/bridge-watcher main.go
 
 ```bash
 # Build image
-docker build -t meshcrypt/bridge-watcher .
+docker build -t Zetaris/bridge-watcher .
 
 # Run container
-docker run -p 8080:8080 --env-file .env meshcrypt/bridge-watcher
+docker run -p 8080:8080 --env-file .env Zetaris/bridge-watcher
 ```
 
 ## API Reference
@@ -346,6 +346,6 @@ MIT License - see LICENSE file
 
 ## Support
 
-- Documentation: https://docs.meshcrypt.io
-- Discord: https://discord.gg/meshcrypt
-- Email: support@meshcrypt.io
+- Documentation: https://docs.Zetaris.io
+- Discord: https://discord.gg/Zetaris
+- Email: support@Zetaris.io

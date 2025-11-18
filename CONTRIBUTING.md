@@ -1,6 +1,6 @@
-# Contributing to MeshCrypt
+# Contributing to Zetaris
 
-Thank you for your interest in contributing to MeshCrypt! This document provides guidelines and instructions for contributors.
+Thank you for your interest in contributing to Zetaris! This document provides guidelines and instructions for contributors.
 
 ## Table of Contents
 1. [Code of Conduct](#code-of-conduct)
@@ -36,7 +36,7 @@ We pledge to make participation in our project a harassment-free experience for 
 - Other conduct which could reasonably be considered inappropriate
 
 ### Enforcement
-Violations may be reported to conduct@meshcrypt.io. All complaints will be reviewed and investigated promptly and fairly.
+Violations may be reported to conduct@Zetaris.io. All complaints will be reviewed and investigated promptly and fairly.
 
 ## Getting Started
 
@@ -51,8 +51,8 @@ Violations may be reported to conduct@meshcrypt.io. All complaints will be revie
 
 1. **Fork the repository**
 ```bash
-gh repo fork meshcrypt/meshcrypt
-cd meshcrypt
+gh repo fork Zetaris/Zetaris
+cd Zetaris
 ```
 
 2. **Install dependencies**
@@ -116,7 +116,7 @@ npm start
 ### Creating New Issues
 
 **Bug reports** should include:
-- MeshCrypt version
+- Zetaris version
 - Operating system
 - Steps to reproduce
 - Expected vs actual behavior
@@ -519,7 +519,7 @@ Closes #123
 **DO NOT** create public issues for security vulnerabilities.
 
 **Instead**:
-1. Email: security@meshcrypt.io
+1. Email: security@Zetaris.io
 2. Include:
    - Vulnerability description
    - Steps to reproduce
@@ -555,8 +555,8 @@ When contributing code that touches:
 
 ## Questions?
 
-- **Discord**: [discord.gg/meshcrypt](https://discord.gg/meshcrypt)
-- **Telegram**: [t.me/meshcrypt-dev](https://t.me/meshcrypt-dev)
-- **Email**: dev@meshcrypt.io
+- **Discord**: [discord.gg/Zetaris](https://discord.gg/Zetaris)
+- **Telegram**: [t.me/Zetaris-dev](https://t.me/Zetaris-dev)
+- **Email**: dev@Zetaris.io
 
-Thank you for contributing to MeshCrypt! 🎉
+Thank you for contributing to Zetaris! 🎉

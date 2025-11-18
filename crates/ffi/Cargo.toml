@@ -1,14 +1,14 @@
 [package]
-name = "meshcrypt-ffi"
+name = "Zetaris-ffi"
 version = "1.0.0"
 edition = "2021"
 
 [lib]
 crate-type = ["cdylib", "staticlib"]
-name = "meshcrypt_ffi"
+name = "Zetaris_ffi"
 
 [dependencies]
-meshcrypt-core = { path = "../core" }
+Zetaris-core = { path = "../core" }
 uniffi = "0.25"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"

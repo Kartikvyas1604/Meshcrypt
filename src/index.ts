@@ -1,4 +1,4 @@
-export { MeshcryptWallet } from './wallet';
+export { ZetarisWallet } from './wallet';
 export * from './types';
 export { KeyManager } from './core/keyManager';
 export { CommitmentScheme, StealthAddressGenerator, ZeroKnowledgeProver } from './crypto/primitives';

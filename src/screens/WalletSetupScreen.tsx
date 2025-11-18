@@ -25,7 +25,7 @@ export default function WalletSetupScreen({ navigation }: WalletSetupScreenProps
       <View style={styles.content}>
         {/* Logo/Title */}
         <View style={styles.header}>
-          <Text style={styles.title}>Meshcrypt</Text>
+          <Text style={styles.title}>Zetaris</Text>
           <Text style={styles.subtitle}>Privacy-First Multi-Chain Wallet</Text>
         </View>
 

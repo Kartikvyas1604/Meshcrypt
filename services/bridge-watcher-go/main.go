@@ -8,14 +8,14 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/meshcrypt/bridge-watcher/internal/bridge"
-	"github.com/meshcrypt/bridge-watcher/internal/config"
-	"github.com/meshcrypt/bridge-watcher/internal/relayer"
-	"github.com/meshcrypt/bridge-watcher/internal/server"
+	"github.com/Zetaris/bridge-watcher/internal/bridge"
+	"github.com/Zetaris/bridge-watcher/internal/config"
+	"github.com/Zetaris/bridge-watcher/internal/relayer"
+	"github.com/Zetaris/bridge-watcher/internal/server"
 )
 
 func main() {
-	log.Println("🌉 Starting MeshCrypt Bridge Watcher...")
+	log.Println("🌉 Starting Zetaris Bridge Watcher...")
 
 	// Load configuration
 	cfg, err := config.Load()

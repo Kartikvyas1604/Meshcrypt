@@ -1,6 +1,6 @@
-# MeshCrypt - Privacy-Preserving Wallet
+# Zetaris - Privacy-Preserving Wallet
 
-![MeshCrypt Logo](assets/images/logo.png)
+![Zetaris Logo](assets/images/logo.png)
 
 <div align="center">
 
@@ -91,11 +91,11 @@
 
   - HD Wallet derivation (BIP39/32/44)```typescript
 
-  - Account switching with independent balancesimport { MeshcryptWallet } from 'meshcrypt-wallet';
+  - Account switching with independent balancesimport { ZetarisWallet } from 'Zetaris-wallet';
 
   - Custom account naming
 
-const wallet = new MeshcryptWallet({
+const wallet = new ZetarisWallet({
 
 - **🌐 Custom Network Support**  network: 'mainnet',
 
@@ -182,8 +182,8 @@ npm test        # Run tests
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/Kartikvyas1604/Meshcrypt.git
-cd Meshcrypt
+git clone https://github.com/Kartikvyas1604/Zetaris.git
+cd Zetaris
 ```
 
 2. **Install dependencies**
@@ -285,7 +285,7 @@ npm run web
 ### Project Structure
 
 ```
-Meshcrypt/
+Zetaris/
 ├── src/
 │   ├── screens/          # React Native screens
 │   │   ├── EnhancedWalletScreen.tsx    # Main wallet (REAL data)
@@ -302,7 +302,7 @@ Meshcrypt/
 │   │   └── networkManager.ts           # Custom networks
 │   │
 │   ├── core/             # Core wallet functionality
-│   │   ├── meshcryptWalletCore.ts      # HD wallet engine
+│   │   ├── ZetarisWalletCore.ts      # HD wallet engine
 │   │   ├── keyManager.ts               # Key derivation
 │   │   └── realKeyManager.ts           # Real key management
 │   │
@@ -609,7 +609,7 @@ This project is **private** and proprietary. All rights reserved.
 - [Solana Foundation](https://solana.com)
 - [Expo Team](https://expo.dev)
 - [React Native Community](https://reactnative.dev)
-- [Open Source Contributors](https://github.com/Kartikvyas1604/Meshcrypt/graphs/contributors)
+- [Open Source Contributors](https://github.com/Kartikvyas1604/Zetaris/graphs/contributors)
 
 ---
 
@@ -617,15 +617,15 @@ This project is **private** and proprietary. All rights reserved.
 
 For questions, issues, or feature requests:
 
-- **Issues**: [GitHub Issues](https://github.com/Kartikvyas1604/Meshcrypt/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/Kartikvyas1604/Meshcrypt/discussions)
+- **Issues**: [GitHub Issues](https://github.com/Kartikvyas1604/Zetaris/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/Kartikvyas1604/Zetaris/discussions)
 - **Email**: kartikvyas1604@gmail.com
 
 ---
 
 ## ⚠️ Disclaimer
 
-**Meshcrypt is experimental software under active development.**
+**Zetaris is experimental software under active development.**
 
 - ⚠️ Use at your own risk
 - 💰 Only use with test funds

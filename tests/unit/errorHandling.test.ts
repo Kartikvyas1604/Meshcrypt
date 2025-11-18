@@ -4,7 +4,7 @@
 
 import {
   ErrorCode,
-  MeshCryptError,
+  ZetarisError,
   NetworkError,
   RpcError,
   TransactionError,
@@ -27,11 +27,11 @@ import {
 } from '../../src/utils/circuitBreaker';
 
 describe('Error Handling', () => {
-  describe('MeshCryptError', () => {
+  describe('ZetarisError', () => {
     it('should create error with all properties', () => {
       const context = { txHash: '0x123' };
       const originalError = new Error('Original');
-      const error = new MeshCryptError(
+      const error = new ZetarisError(
         'Test error',
         ErrorCode.TX_FAILED,
         true,
@@ -48,10 +48,10 @@ describe('Error Handling', () => {
     });
 
     it('should serialize to JSON', () => {
-      const error = new MeshCryptError('Test', ErrorCode.NETWORK_TIMEOUT);
+      const error = new ZetarisError('Test', ErrorCode.NETWORK_TIMEOUT);
       const json = error.toJSON();
 
-      expect(json.name).toBe('MeshCryptError');
+      expect(json.name).toBe('ZetarisError');
       expect(json.message).toBe('Test');
       expect(json.code).toBe(ErrorCode.NETWORK_TIMEOUT);
     });
@@ -61,7 +61,7 @@ describe('Error Handling', () => {
     it('should create NetworkError', () => {
       const error = new NetworkError('Network down');
       expect(error).toBeInstanceOf(NetworkError);
-      expect(error).toBeInstanceOf(MeshCryptError);
+      expect(error).toBeInstanceOf(ZetarisError);
       expect(error.retryable).toBe(true);
     });
 
@@ -86,7 +86,7 @@ describe('Error Handling', () => {
   });
 
   describe('isRetryableError', () => {
-    it('should identify retryable MeshCryptError', () => {
+    it('should identify retryable ZetarisError', () => {
       const retryable = new NetworkError('Timeout');
       expect(isRetryableError(retryable)).toBe(true);
 

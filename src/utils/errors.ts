@@ -57,9 +57,9 @@ export interface ErrorMetadata {
 }
 
 /**
- * Base MeshCrypt Error
+ * Base Zetaris Error
  */
-export class MeshCryptError extends Error {
+export class ZetarisError extends Error {
   public readonly code: ErrorCode;
   public readonly timestamp: number;
   public readonly retryable: boolean;
@@ -74,7 +74,7 @@ export class MeshCryptError extends Error {
     originalError?: Error
   ) {
     super(message);
-    this.name = 'MeshCryptError';
+    this.name = 'ZetarisError';
     this.code = code;
     this.timestamp = Date.now();
     this.retryable = retryable;
@@ -103,7 +103,7 @@ export class MeshCryptError extends Error {
 /**
  * Network-related errors
  */
-export class NetworkError extends MeshCryptError {
+export class NetworkError extends ZetarisError {
   constructor(
     message: string,
     code: ErrorCode = ErrorCode.NETWORK_UNAVAILABLE,
@@ -132,7 +132,7 @@ export class RpcError extends NetworkError {
 /**
  * Wallet-related errors
  */
-export class WalletError extends MeshCryptError {
+export class WalletError extends ZetarisError {
   constructor(
     message: string,
     code: ErrorCode = ErrorCode.WALLET_NOT_INITIALIZED,
@@ -147,7 +147,7 @@ export class WalletError extends MeshCryptError {
 /**
  * Transaction errors
  */
-export class TransactionError extends MeshCryptError {
+export class TransactionError extends ZetarisError {
   constructor(
     message: string,
     code: ErrorCode = ErrorCode.TX_FAILED,
@@ -163,7 +163,7 @@ export class TransactionError extends MeshCryptError {
 /**
  * Storage errors
  */
-export class StorageError extends MeshCryptError {
+export class StorageError extends ZetarisError {
   constructor(
     message: string,
     code: ErrorCode = ErrorCode.STORAGE_ERROR,
@@ -178,7 +178,7 @@ export class StorageError extends MeshCryptError {
 /**
  * ZK proof errors
  */
-export class ZkError extends MeshCryptError {
+export class ZkError extends ZetarisError {
   constructor(
     message: string,
     code: ErrorCode = ErrorCode.PROOF_GENERATION_FAILED,
@@ -193,7 +193,7 @@ export class ZkError extends MeshCryptError {
 /**
  * Circuit breaker open error
  */
-export class CircuitBreakerError extends MeshCryptError {
+export class CircuitBreakerError extends ZetarisError {
   constructor(message: string = 'Circuit breaker is open', context?: Record<string, any>) {
     super(message, ErrorCode.CIRCUIT_OPEN, false, context);
     this.name = 'CircuitBreakerError';
@@ -203,7 +203,7 @@ export class CircuitBreakerError extends MeshCryptError {
 /**
  * Validation errors
  */
-export class ValidationError extends MeshCryptError {
+export class ValidationError extends ZetarisError {
   constructor(message: string, context?: Record<string, any>) {
     super(message, ErrorCode.VALIDATION_ERROR, false, context);
     this.name = 'ValidationError';
@@ -214,7 +214,7 @@ export class ValidationError extends MeshCryptError {
  * Check if error is retryable
  */
 export function isRetryableError(error: any): boolean {
-  if (error instanceof MeshCryptError) {
+  if (error instanceof ZetarisError) {
     return error.retryable;
   }
 
@@ -238,7 +238,7 @@ export function isRetryableError(error: any): boolean {
 
   return retryablePatterns.some(pattern => message.includes(pattern));
 }
-export function parseEthersError(error: any): MeshCryptError {
+export function parseEthersError(error: any): ZetarisError {
   const message = error?.message || 'Unknown error';
   const code = error?.code || '';
 
@@ -289,5 +289,5 @@ export function parseEthersError(error: any): MeshCryptError {
   }
 
   // Default to generic error
-  return new MeshCryptError(message, ErrorCode.UNKNOWN_ERROR, isRetryableError(error), { code }, error);
+  return new ZetarisError(message, ErrorCode.UNKNOWN_ERROR, isRetryableError(error), { code }, error);
 }

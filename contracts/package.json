@@ -1,7 +1,7 @@
 {
-  "name": "meshcrypt-contracts",
+  "name": "Zetaris-contracts",
   "version": "1.0.0",
-  "description": "Smart contracts for MeshCrypt privacy wallet",
+  "description": "Smart contracts for Zetaris privacy wallet",
   "scripts": {
     "compile": "hardhat compile",
     "test": "hardhat test",
@@ -23,7 +23,7 @@
     "privacy",
     "defi"
   ],
-  "author": "MeshCrypt Team",
+  "author": "Zetaris Team",
   "license": "MIT",
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^4.0.0",

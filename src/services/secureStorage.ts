@@ -23,11 +23,11 @@ import { CryptoUtils } from '../utils/crypto';
 
 // Storage keys
 const STORAGE_KEYS = {
-  ENCRYPTED_MNEMONIC: '@meshcrypt:encrypted_mnemonic',
-  ENCRYPTED_KEYS: '@meshcrypt:encrypted_keys',
-  SALT: '@meshcrypt:salt',
-  KEY_ROTATION_DATE: '@meshcrypt:key_rotation_date',
-  ENCRYPTED_METADATA: '@meshcrypt:metadata',
+  ENCRYPTED_MNEMONIC: '@Zetaris:encrypted_mnemonic',
+  ENCRYPTED_KEYS: '@Zetaris:encrypted_keys',
+  SALT: '@Zetaris:salt',
+  KEY_ROTATION_DATE: '@Zetaris:key_rotation_date',
+  ENCRYPTED_METADATA: '@Zetaris:metadata',
 } as const;
 
 // Encryption configuration

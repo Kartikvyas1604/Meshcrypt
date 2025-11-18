@@ -1,4 +1,4 @@
-module github.com/meshcrypt/bridge-watcher
+module github.com/Zetaris/bridge-watcher
 
 go 1.21
 

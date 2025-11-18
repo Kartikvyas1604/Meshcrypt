@@ -1,7 +1,7 @@
 {
-  "name": "@meshcrypt/sdk",
+  "name": "@Zetaris/sdk",
   "version": "1.0.0",
-  "description": "TypeScript SDK for MeshCrypt privacy wallet",
+  "description": "TypeScript SDK for Zetaris privacy wallet",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -11,13 +11,13 @@
     "prepublish": "npm run build"
   },
   "keywords": [
-    "meshcrypt",
+    "Zetaris",
     "privacy",
     "wallet",
     "zk-snark",
     "react-native"
   ],
-  "author": "MeshCrypt Team",
+  "author": "Zetaris Team",
   "license": "MIT",
   "dependencies": {
     "react-native": "^0.73.0"

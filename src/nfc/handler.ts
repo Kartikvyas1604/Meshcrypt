@@ -191,7 +191,7 @@ export class NFCHandler {
     // Derive encryption key
     const encryptionKey = sha256(Buffer.concat([
       sharedSecret,
-      Buffer.from('MeshcryptNFCEncryption')
+      Buffer.from('ZetarisNFCEncryption')
     ]));
 
     // Create session

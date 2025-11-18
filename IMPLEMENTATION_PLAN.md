@@ -1,11 +1,11 @@
-# MeshCrypt Implementation Plan
+# Zetaris Implementation Plan
 
 **Status**: In Progress  
 **Last Updated**: 18 November 2025
 
 ## Executive Summary
 
-MeshCrypt has a **solid cryptographic foundation** with most core features already implemented. This plan focuses on **integration, testing, and production readiness** rather than building from scratch.
+Zetaris has a **solid cryptographic foundation** with most core features already implemented. This plan focuses on **integration, testing, and production readiness** rather than building from scratch.
 
 ### What's Already Working ✅
 
@@ -317,7 +317,7 @@ export class EthereumAdapter {
 - [ ] Implement QR code scanning for addresses
 - [ ] Add QR generation for receive flow
 - [ ] Support payment URIs (EIP-681)
-- [ ] Add deep link handling (meshcrypt://)
+- [ ] Add deep link handling (Zetaris://)
 
 **Deliverables**:
 - [ ] All screens have loading states

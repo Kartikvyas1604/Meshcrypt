@@ -1,5 +1,5 @@
 /**
- * Meshcrypt Wallet Core - Multi-Chain HD Wallet
+ * Zetaris Wallet Core - Multi-Chain HD Wallet
  * Supports: Zcash, Ethereum, Polygon, Solana, Bitcoin
  */
 
@@ -39,7 +39,7 @@ export interface WalletData {
   createdAt: number;
 }
 
-export class MeshcryptWalletCore {
+export class ZetarisWalletCore {
   private walletData: WalletData | null = null;
 
   /**
@@ -281,7 +281,7 @@ export class MeshcryptWalletCore {
     const data = accounts.map(a => a.address).join('');
     const hash = sha256(Buffer.from(data, 'utf8'));
     
-    // Encode as Bech32 with 'cm' prefix (Meshcrypt)
+    // Encode as Bech32 with 'cm' prefix (Zetaris)
     const base32 = Buffer.from(hash).toString('base64')
       .replace(/\+/g, '')
       .replace(/\//g, '')

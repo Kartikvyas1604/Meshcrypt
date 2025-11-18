@@ -1,6 +1,6 @@
 # Integration Tests
 
-Comprehensive end-to-end tests for the MeshCrypt privacy wallet.
+Comprehensive end-to-end tests for the Zetaris privacy wallet.
 
 ## Test Coverage
 
@@ -266,6 +266,6 @@ Opens `test-report.html` with:
 
 ## Support
 
-- Issues: https://github.com/meshcrypt/meshcrypt/issues
-- Docs: https://docs.meshcrypt.io/testing
-- Discord: https://discord.gg/meshcrypt
+- Issues: https://github.com/Zetaris/Zetaris/issues
+- Docs: https://docs.Zetaris.io/testing
+- Discord: https://discord.gg/Zetaris

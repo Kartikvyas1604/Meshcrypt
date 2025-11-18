@@ -1,6 +1,6 @@
 /**
  * Settings Screen - Complete wallet settings interface
- * Based on Meshcrypt specification
+ * Based on Zetaris specification
  */
 
 import React, { useState } from 'react';
@@ -58,7 +58,7 @@ export default function SettingsScreen({ navigation }: SettingsScreenProps) {
           style: 'destructive',
           onPress: async () => {
             // Clear transaction cache
-            await AsyncStorage.removeItem('meshcrypt_tx_cache');
+            await AsyncStorage.removeItem('Zetaris_tx_cache');
             Alert.alert('Success', 'Cache cleared successfully');
           },
         },
@@ -76,8 +76,8 @@ export default function SettingsScreen({ navigation }: SettingsScreenProps) {
           text: 'Reset',
           style: 'destructive',
           onPress: async () => {
-            await AsyncStorage.removeItem('meshcrypt_wallet');
-            await AsyncStorage.removeItem('meshcrypt_has_wallet');
+            await AsyncStorage.removeItem('Zetaris_wallet');
+            await AsyncStorage.removeItem('Zetaris_has_wallet');
             navigation.navigate('WalletSetup');
           },
         },
@@ -292,7 +292,7 @@ export default function SettingsScreen({ navigation }: SettingsScreenProps) {
               <Text style={styles.settingIcon}>ℹ️</Text>
               <View>
                 <Text style={styles.settingLabel}>Version</Text>
-                <Text style={styles.settingDescription}>1.0.0 (Meshcrypt)</Text>
+                <Text style={styles.settingDescription}>1.0.0 (Zetaris)</Text>
               </View>
             </View>
           </View>
@@ -320,7 +320,7 @@ export default function SettingsScreen({ navigation }: SettingsScreenProps) {
 
         <View style={styles.footer}>
           <Text style={styles.footerText}>
-            Meshcrypt Privacy-First Wallet
+            Zetaris Privacy-First Wallet
           </Text>
           <Text style={styles.footerSubtext}>
             Your keys, your crypto, your privacy

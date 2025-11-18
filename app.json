@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "meshcrypt",
-    "slug": "meshcrypt",
+    "name": "Zetaris",
+    "slug": "Zetaris",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -12,15 +12,15 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "bundleIdentifier": "com.kartikvyas.meshcrypt",
+      "bundleIdentifier": "com.kartikvyas.Zetaris",
       "supportsTablet": true,
       "infoPlist": {
-        "NSCameraUsageDescription": "Allow Meshcrypt to use the camera for QR code scanning",
-        "NSLocationWhenInUseUsageDescription": "Allow Meshcrypt to access your location for mesh network features"
+        "NSCameraUsageDescription": "Allow Zetaris to use the camera for QR code scanning",
+        "NSLocationWhenInUseUsageDescription": "Allow Zetaris to access your location for mesh network features"
       }
     },
     "android": {
-      "package": "com.kartikvyas.meshcrypt",
+      "package": "com.kartikvyas.Zetaris",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"

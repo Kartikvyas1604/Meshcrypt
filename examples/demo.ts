@@ -1,9 +1,9 @@
-import { MeshcryptWallet } from '../src/wallet';
+import { ZetarisWallet } from '../src/wallet';
 
 async function demoBasicOperations() {
-  console.log('=== Meshcrypt Wallet Demo ===\n');
+  console.log('=== Zetaris Wallet Demo ===\n');
 
-  const wallet = new MeshcryptWallet({
+  const wallet = new ZetarisWallet({
     network: 'testnet',
     privacyLevel: 'medium'
   });
@@ -80,7 +80,7 @@ async function demoBasicOperations() {
 async function demoCrossChainSwap() {
   console.log('\n=== Cross-Chain Swap Demo ===\n');
 
-  const wallet = new MeshcryptWallet({
+  const wallet = new ZetarisWallet({
     network: 'testnet',
     enableMesh: false,
     enableNFC: false,
@@ -132,7 +132,7 @@ async function demoCrossChainSwap() {
 async function demoPrivacyFeatures() {
   console.log('\n=== Privacy Features Demo ===\n');
 
-  const wallet = new MeshcryptWallet({
+  const wallet = new ZetarisWallet({
     network: 'testnet',
     enableMesh: true,
     enableNFC: false,

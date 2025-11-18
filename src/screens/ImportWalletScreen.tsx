@@ -17,7 +17,7 @@ import {
   Platform,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { MeshcryptWalletCore } from '../core/meshcryptWalletCore';
+import { ZetarisWalletCore } from '../core/ZetarisWalletCore';
 
 interface ImportWalletScreenProps {
   navigation: {
@@ -50,12 +50,12 @@ export default function ImportWalletScreen({ navigation }: ImportWalletScreenPro
     setError('');
 
     try {
-      const walletCore = new MeshcryptWalletCore();
+      const walletCore = new ZetarisWalletCore();
       const wallet = await walletCore.importWallet(trimmedPhrase);
       
       // Save to AsyncStorage
-      await AsyncStorage.setItem('meshcrypt_wallet', JSON.stringify(wallet));
-      await AsyncStorage.setItem('meshcrypt_has_wallet', 'true');
+      await AsyncStorage.setItem('Zetaris_wallet', JSON.stringify(wallet));
+      await AsyncStorage.setItem('Zetaris_has_wallet', 'true');
       
       // Navigate to main wallet
       navigation.reset({

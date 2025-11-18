@@ -1,5 +1,5 @@
 /**
- * MeshCrypt TypeScript SDK
+ * Zetaris TypeScript SDK
  * 
  * Privacy-preserving wallet SDK with ZK-SNARKs, stealth addresses,
  * and confidential transactions.
@@ -7,11 +7,11 @@
 
 import { NativeModules, Platform } from 'react-native';
 
-const { MeshcryptFFI } = NativeModules;
+const { ZetarisFFI } = NativeModules;
 
-if (!MeshcryptFFI) {
+if (!ZetarisFFI) {
   throw new Error(
-    'MeshcryptFFI native module not found. Make sure the native bindings are properly installed.'
+    'ZetarisFFI native module not found. Make sure the native bindings are properly installed.'
   );
 }
 
@@ -66,7 +66,7 @@ export interface ZkProof {
   proofType: string;
 }
 
-export class MeshcryptError extends Error {
+export class ZetarisError extends Error {
   constructor(
     message: string,
     public code:
@@ -81,22 +81,22 @@ export class MeshcryptError extends Error {
       | 'KeyDerivationFailed'
   ) {
     super(message);
-    this.name = 'MeshcryptError';
+    this.name = 'ZetarisError';
   }
 }
 
 /**
- * Main SDK class for MeshCrypt wallet operations
+ * Main SDK class for Zetaris wallet operations
  */
-export class MeshcryptSDK {
+export class ZetarisSDK {
   /**
    * Generate a new BIP39 mnemonic phrase
    */
   static async generateMnemonic(): Promise<string> {
     try {
-      return await MeshcryptFFI.generateMnemonic();
+      return await ZetarisFFI.generateMnemonic();
     } catch (error) {
-      throw new MeshcryptError(
+      throw new ZetarisError(
         'Failed to generate mnemonic',
         'InvalidMnemonic'
       );
@@ -111,10 +111,10 @@ export class MeshcryptSDK {
     password: string
   ): Promise<WalletHandle> {
     try {
-      const handle = await MeshcryptFFI.createWallet(mnemonic, password);
+      const handle = await ZetarisFFI.createWallet(mnemonic, password);
       return handle;
     } catch (error) {
-      throw new MeshcryptError(
+      throw new ZetarisError(
         'Failed to create wallet',
         'InvalidMnemonic'
       );
@@ -126,10 +126,10 @@ export class MeshcryptSDK {
    */
   static async getWalletInfo(handle: WalletHandle): Promise<WalletInfo> {
     try {
-      const info = await MeshcryptFFI.getWalletInfo(handle);
+      const info = await ZetarisFFI.getWalletInfo(handle);
       return info;
     } catch (error) {
-      throw new MeshcryptError(
+      throw new ZetarisError(
         'Failed to get wallet info',
         'WalletNotFound'
       );
@@ -145,14 +145,14 @@ export class MeshcryptSDK {
     amount: number
   ): Promise<Transaction> {
     try {
-      const tx = await MeshcryptFFI.createTransaction(
+      const tx = await ZetarisFFI.createTransaction(
         handle,
         toAddress,
         amount
       );
       return tx;
     } catch (error) {
-      throw new MeshcryptError(
+      throw new ZetarisError(
         'Failed to create transaction',
         'InsufficientFunds'
       );
@@ -167,10 +167,10 @@ export class MeshcryptSDK {
     tx: Transaction
   ): Promise<string> {
     try {
-      const signature = await MeshcryptFFI.signTransaction(handle, tx);
+      const signature = await ZetarisFFI.signTransaction(handle, tx);
       return signature;
     } catch (error) {
-      throw new MeshcryptError(
+      throw new ZetarisError(
         'Failed to sign transaction',
         'InvalidSignature'
       );
@@ -182,7 +182,7 @@ export class MeshcryptSDK {
    */
   static async verifyTransaction(tx: Transaction): Promise<boolean> {
     try {
-      return await MeshcryptFFI.verifyTransaction(tx);
+      return await ZetarisFFI.verifyTransaction(tx);
     } catch (error) {
       return false;
     }
@@ -195,10 +195,10 @@ export class MeshcryptSDK {
     handle: WalletHandle
   ): Promise<StealthAddress> {
     try {
-      const address = await MeshcryptFFI.generateStealthAddress(handle);
+      const address = await ZetarisFFI.generateStealthAddress(handle);
       return address;
     } catch (error) {
-      throw new MeshcryptError(
+      throw new ZetarisError(
         'Failed to generate stealth address',
         'KeyDerivationFailed'
       );
@@ -213,13 +213,13 @@ export class MeshcryptSDK {
     blindingFactor: Uint8Array
   ): Promise<Commitment> {
     try {
-      const commitment = await MeshcryptFFI.createCommitment(
+      const commitment = await ZetarisFFI.createCommitment(
         value,
         Array.from(blindingFactor)
       );
       return commitment;
     } catch (error) {
-      throw new MeshcryptError(
+      throw new ZetarisError(
         'Failed to create commitment',
         'ProofGenerationFailed'
       );
@@ -235,14 +235,14 @@ export class MeshcryptSDK {
     blinding: Uint8Array
   ): Promise<RangeProof> {
     try {
-      const proof = await MeshcryptFFI.createRangeProof(
+      const proof = await ZetarisFFI.createRangeProof(
         commitment,
         value,
         Array.from(blinding)
       );
       return proof;
     } catch (error) {
-      throw new MeshcryptError(
+      throw new ZetarisError(
         'Failed to create range proof',
         'ProofGenerationFailed'
       );
@@ -257,7 +257,7 @@ export class MeshcryptSDK {
     commitment: Commitment
   ): Promise<boolean> {
     try {
-      return await MeshcryptFFI.verifyRangeProof(proof, commitment);
+      return await ZetarisFFI.verifyRangeProof(proof, commitment);
     } catch (error) {
       return false;
     }
@@ -272,14 +272,14 @@ export class MeshcryptSDK {
     circuitType: string;
   }): Promise<ZkProof> {
     try {
-      const proof = await MeshcryptFFI.generateZkProof({
+      const proof = await ZetarisFFI.generateZkProof({
         publicInputs: Array.from(input.publicInputs),
         privateInputs: Array.from(input.privateInputs),
         circuitType: input.circuitType,
       });
       return proof;
     } catch (error) {
-      throw new MeshcryptError(
+      throw new ZetarisError(
         'Failed to generate ZK proof',
         'ProofGenerationFailed'
       );
@@ -294,7 +294,7 @@ export class MeshcryptSDK {
     publicInputs: Uint8Array
   ): Promise<boolean> {
     try {
-      return await MeshcryptFFI.verifyZkProof(
+      return await ZetarisFFI.verifyZkProof(
         proof,
         Array.from(publicInputs)
       );
@@ -311,9 +311,9 @@ export class MeshcryptSDK {
     accountIndex: number
   ): Promise<string> {
     try {
-      return await MeshcryptFFI.exportPrivateKey(handle, accountIndex);
+      return await ZetarisFFI.exportPrivateKey(handle, accountIndex);
     } catch (error) {
-      throw new MeshcryptError(
+      throw new ZetarisError(
         'Failed to export private key',
         'KeyDerivationFailed'
       );
@@ -325,9 +325,9 @@ export class MeshcryptSDK {
    */
   static async exportViewKey(handle: WalletHandle): Promise<string> {
     try {
-      return await MeshcryptFFI.exportViewKey(handle);
+      return await ZetarisFFI.exportViewKey(handle);
     } catch (error) {
-      throw new MeshcryptError(
+      throw new ZetarisError(
         'Failed to export view key',
         'KeyDerivationFailed'
       );
@@ -342,9 +342,9 @@ export class MeshcryptSDK {
     password: string
   ): Promise<WalletHandle> {
     try {
-      return await MeshcryptFFI.importPrivateKey(privateKey, password);
+      return await ZetarisFFI.importPrivateKey(privateKey, password);
     } catch (error) {
-      throw new MeshcryptError(
+      throw new ZetarisError(
         'Failed to import private key',
         'InvalidPassword'
       );
@@ -355,7 +355,7 @@ export class MeshcryptSDK {
 /**
  * Utility functions
  */
-export class MeshcryptUtils {
+export class ZetarisUtils {
   /**
    * Generate random blinding factor for commitments
    */
@@ -403,4 +403,4 @@ export class MeshcryptUtils {
   }
 }
 
-export default MeshcryptSDK;
+export default ZetarisSDK;

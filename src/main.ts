@@ -1,11 +1,11 @@
-import { MeshcryptWallet } from './wallet';
+import { ZetarisWallet } from './wallet';
 import { WalletAPI } from './api/server';
 
 async function main() {
-  console.log('Meshcrypt Wallet - Privacy-focused cryptocurrency wallet');
+  console.log('Zetaris Wallet - Privacy-focused cryptocurrency wallet');
   console.log('========================================================\n');
 
-  const wallet = new MeshcryptWallet({
+  const wallet = new ZetarisWallet({
     network: 'testnet',
     enableMesh: true,
     enableNFC: false,

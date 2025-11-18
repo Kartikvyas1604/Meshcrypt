@@ -1,6 +1,6 @@
 /**
  * Real Send Screen - Actual blockchain transaction sending
- * Based on Meshcrypt specification from prompt.txt
+ * Based on Zetaris specification from prompt.txt
  * Supports: ETH, MATIC, SOL, BTC, ZEC
  */
 
@@ -69,7 +69,7 @@ const RealSendScreen: React.FC<Props> = ({ navigation }) => {
 
   const loadWalletData = async () => {
     try {
-      const encryptedWallet = await AsyncStorage.getItem('meshcrypt_wallet');
+      const encryptedWallet = await AsyncStorage.getItem('Zetaris_wallet');
       if (!encryptedWallet) {
         Alert.alert('Error', 'No wallet found');
         navigation.goBack();

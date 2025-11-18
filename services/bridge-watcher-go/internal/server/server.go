@@ -11,9 +11,9 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/websocket"
-	"github.com/meshcrypt/bridge-watcher/internal/bridge"
-	"github.com/meshcrypt/bridge-watcher/internal/config"
-	"github.com/meshcrypt/bridge-watcher/internal/relayer"
+	"github.com/Zetaris/bridge-watcher/internal/bridge"
+	"github.com/Zetaris/bridge-watcher/internal/config"
+	"github.com/Zetaris/bridge-watcher/internal/relayer"
 )
 
 type Server struct {
@@ -220,7 +220,7 @@ func (s *Server) handleWebSocket(w http.ResponseWriter, r *http.Request) {
 	// Send welcome message
 	conn.WriteJSON(map[string]interface{}{
 		"type": "connected",
-		"message": "Connected to MeshCrypt Bridge Watcher",
+		"message": "Connected to Zetaris Bridge Watcher",
 		"timestamp": time.Now(),
 	})
 

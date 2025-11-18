@@ -1,4 +1,4 @@
-namespace meshcrypt {
+namespace Zetaris {
     // Wallet operations
     WalletHandle create_wallet(string mnemonic, string password);
     string generate_mnemonic();
@@ -83,7 +83,7 @@ dictionary ZkProof {
 };
 
 [Error]
-enum MeshcryptError {
+enum ZetarisError {
     "InvalidMnemonic",
     "InvalidPassword",
     "InvalidAddress",

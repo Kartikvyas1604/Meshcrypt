@@ -196,7 +196,7 @@ export class MeshNetwork {
     // Derive encryption key from shared secret
     const encryptionKey = sha256(Buffer.concat([
       sharedSecret,
-      Buffer.from('MeshcryptEncryption')
+      Buffer.from('ZetarisEncryption')
     ]));
 
     // Store peer secrets

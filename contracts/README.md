@@ -1,6 +1,6 @@
-# MeshCrypt Smart Contracts
+# Zetaris Smart Contracts
 
-Solidity smart contracts for the MeshCrypt privacy wallet ecosystem.
+Solidity smart contracts for the Zetaris privacy wallet ecosystem.
 
 ## Contracts Overview
 

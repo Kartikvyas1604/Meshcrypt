@@ -53,7 +53,7 @@ func Load() (*Config, error) {
 		ArbitrumRPC: getEnv("ARBITRUM_RPC", ""),
 		OptimismRPC: getEnv("OPTIMISM_RPC", ""),
 
-		DatabaseURL: getEnv("DATABASE_URL", "postgres://localhost:5432/meshcrypt"),
+		DatabaseURL: getEnv("DATABASE_URL", "postgres://localhost:5432/Zetaris"),
 		RedisURL:    getEnv("REDIS_URL", "redis://localhost:6379"),
 
 		RelayerPrivateKey: getEnv("RELAYER_PRIVATE_KEY", ""),

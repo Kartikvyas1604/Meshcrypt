@@ -12,7 +12,7 @@ import { IntentEngine, AtomicSwapCoordinator } from './settlement/intent';
 import { PrivacyAnalyticsEngine } from './analytics/engine';
 import { CommitmentScheme, StealthAddressGenerator } from './crypto/primitives';
 
-export class MeshcryptWallet {
+export class ZetarisWallet {
   private config: WalletConfig;
   private keyManager: KeyManager;
   private adapters: Map<string, BlockchainAdapter> = new Map();

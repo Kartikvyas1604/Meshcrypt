@@ -1,7 +1,7 @@
 /**
  * Enhanced Wallet Screen
  * 
- * Integrates all Meshcrypt features:
+ * Integrates all Zetaris features:
  * - Multi-chain balances (Ethereum, Zcash, Polygon)
  * - Confidential transactions
  * - NFC tap-to-pay

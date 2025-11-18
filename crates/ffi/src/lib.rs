@@ -1,13 +1,13 @@
 use std::sync::{Arc, Mutex};
 use std::collections::HashMap;
-use meshcrypt_core::{MeshcryptWallet, Transaction as CoreTransaction};
+use Zetaris_core::{ZetarisWallet, Transaction as CoreTransaction};
 use serde::{Serialize, Deserialize};
 
-uniffi::include_scaffolding!("meshcrypt");
+uniffi::include_scaffolding!("Zetaris");
 
 // Global wallet storage
 lazy_static::lazy_static! {
-    static ref WALLETS: Arc<Mutex<HashMap<u64, Arc<Mutex<MeshcryptWallet>>>>> = 
+    static ref WALLETS: Arc<Mutex<HashMap<u64, Arc<Mutex<ZetarisWallet>>>>> = 
         Arc::new(Mutex::new(HashMap::new()));
     static ref NEXT_ID: Arc<Mutex<u64>> = Arc::new(Mutex::new(1));
 }
@@ -80,7 +80,7 @@ pub struct ZkProof {
 }
 
 #[derive(Debug, thiserror::Error)]
-pub enum MeshcryptError {
+pub enum ZetarisError {
     #[error("Invalid mnemonic phrase")]
     InvalidMnemonic,
     #[error("Invalid password")]
@@ -102,9 +102,9 @@ pub enum MeshcryptError {
 }
 
 // Wallet Operations
-pub fn create_wallet(mnemonic: String, password: String) -> Result<WalletHandle, MeshcryptError> {
-    let wallet = MeshcryptWallet::new(&mnemonic, &password)
-        .map_err(|_| MeshcryptError::InvalidMnemonic)?;
+pub fn create_wallet(mnemonic: String, password: String) -> Result<WalletHandle, ZetarisError> {
+    let wallet = ZetarisWallet::new(&mnemonic, &password)
+        .map_err(|_| ZetarisError::InvalidMnemonic)?;
     
     let mut next_id = NEXT_ID.lock().unwrap();
     let id = *next_id;
@@ -122,10 +122,10 @@ pub fn generate_mnemonic() -> String {
     mnemonic.to_string()
 }
 
-pub fn get_wallet_info(handle: WalletHandle) -> Result<WalletInfo, MeshcryptError> {
+pub fn get_wallet_info(handle: WalletHandle) -> Result<WalletInfo, ZetarisError> {
     let wallets = WALLETS.lock().unwrap();
     let wallet = wallets.get(&handle.id)
-        .ok_or(MeshcryptError::WalletNotFound)?;
+        .ok_or(ZetarisError::WalletNotFound)?;
     
     let wallet = wallet.lock().unwrap();
     
@@ -142,16 +142,16 @@ pub fn create_transaction(
     handle: WalletHandle,
     to_address: String,
     amount: u64,
-) -> Result<Transaction, MeshcryptError> {
+) -> Result<Transaction, ZetarisError> {
     let wallets = WALLETS.lock().unwrap();
     let wallet = wallets.get(&handle.id)
-        .ok_or(MeshcryptError::WalletNotFound)?;
+        .ok_or(ZetarisError::WalletNotFound)?;
     
     let wallet = wallet.lock().unwrap();
     
     // Create confidential transaction
     let tx = wallet.create_confidential_transaction(0, &to_address, amount)
-        .map_err(|_| MeshcryptError::InsufficientFunds)?;
+        .map_err(|_| ZetarisError::InsufficientFunds)?;
     
     Ok(Transaction {
         from: wallet.get_address(0).unwrap_or_default(),
@@ -172,16 +172,16 @@ pub fn create_transaction(
 pub fn sign_transaction(
     handle: WalletHandle,
     tx: Transaction,
-) -> Result<String, MeshcryptError> {
+) -> Result<String, ZetarisError> {
     let wallets = WALLETS.lock().unwrap();
     let wallet = wallets.get(&handle.id)
-        .ok_or(MeshcryptError::WalletNotFound)?;
+        .ok_or(ZetarisError::WalletNotFound)?;
     
     let wallet = wallet.lock().unwrap();
     
     // Sign transaction
     let signature = wallet.sign_transaction(0, &tx.to, tx.amount)
-        .map_err(|_| MeshcryptError::InvalidSignature)?;
+        .map_err(|_| ZetarisError::InvalidSignature)?;
     
     Ok(hex::encode(signature))
 }
@@ -195,15 +195,15 @@ pub fn verify_transaction(tx: Transaction) -> bool {
 // Privacy Operations
 pub fn generate_stealth_address(
     handle: WalletHandle,
-) -> Result<StealthAddress, MeshcryptError> {
+) -> Result<StealthAddress, ZetarisError> {
     let wallets = WALLETS.lock().unwrap();
     let wallet = wallets.get(&handle.id)
-        .ok_or(MeshcryptError::WalletNotFound)?;
+        .ok_or(ZetarisError::WalletNotFound)?;
     
     let wallet = wallet.lock().unwrap();
     
     let (address, scan_key, spend_key) = wallet.generate_stealth_address(0)
-        .map_err(|_| MeshcryptError::KeyDerivationFailed)?;
+        .map_err(|_| ZetarisError::KeyDerivationFailed)?;
     
     Ok(StealthAddress {
         address,
@@ -215,13 +215,13 @@ pub fn generate_stealth_address(
 pub fn create_commitment(
     value: u64,
     blinding_factor: Vec<u8>,
-) -> Result<Commitment, MeshcryptError> {
-    use meshcrypt_core::crypto::commitments::create_pedersen_commitment;
+) -> Result<Commitment, ZetarisError> {
+    use Zetaris_core::crypto::commitments::create_pedersen_commitment;
     use curve25519_dalek::scalar::Scalar;
     
     let blinding = Scalar::from_bytes_mod_order(
         blinding_factor.as_slice().try_into()
-            .map_err(|_| MeshcryptError::ProofGenerationFailed)?
+            .map_err(|_| ZetarisError::ProofGenerationFailed)?
     );
     
     let commitment = create_pedersen_commitment(value, &blinding);
@@ -236,12 +236,12 @@ pub fn create_range_proof(
     commitment: Commitment,
     value: u64,
     blinding: Vec<u8>,
-) -> Result<RangeProof, MeshcryptError> {
-    use meshcrypt_core::crypto::bulletproofs::BulletproofRangeProof;
+) -> Result<RangeProof, ZetarisError> {
+    use Zetaris_core::crypto::bulletproofs::BulletproofRangeProof;
     
     // Create range proof
     let proof = BulletproofRangeProof::create(value, &blinding)
-        .map_err(|_| MeshcryptError::ProofGenerationFailed)?;
+        .map_err(|_| ZetarisError::ProofGenerationFailed)?;
     
     Ok(RangeProof {
         proof: proof.serialize(),
@@ -254,13 +254,13 @@ pub fn verify_range_proof(
     proof: RangeProof,
     commitment: Commitment,
 ) -> bool {
-    use meshcrypt_core::crypto::bulletproofs::BulletproofRangeProof;
+    use Zetaris_core::crypto::bulletproofs::BulletproofRangeProof;
     
     BulletproofRangeProof::verify(&proof.proof, &commitment.commitment).unwrap_or(false)
 }
 
 // ZK Proof Operations
-pub fn generate_zk_proof(input: ProofInput) -> Result<ZkProof, MeshcryptError> {
+pub fn generate_zk_proof(input: ProofInput) -> Result<ZkProof, ZetarisError> {
     // This would integrate with the Circom circuits
     // For now, return a placeholder
     Ok(ZkProof {
@@ -280,28 +280,28 @@ pub fn verify_zk_proof(proof: ZkProof, public_inputs: Vec<u8>) -> bool {
 pub fn export_private_key(
     handle: WalletHandle,
     account_index: u32,
-) -> Result<String, MeshcryptError> {
+) -> Result<String, ZetarisError> {
     let wallets = WALLETS.lock().unwrap();
     let wallet = wallets.get(&handle.id)
-        .ok_or(MeshcryptError::WalletNotFound)?;
+        .ok_or(ZetarisError::WalletNotFound)?;
     
     let wallet = wallet.lock().unwrap();
     
     let private_key = wallet.export_private_key(account_index)
-        .map_err(|_| MeshcryptError::KeyDerivationFailed)?;
+        .map_err(|_| ZetarisError::KeyDerivationFailed)?;
     
     Ok(hex::encode(private_key))
 }
 
-pub fn export_view_key(handle: WalletHandle) -> Result<String, MeshcryptError> {
+pub fn export_view_key(handle: WalletHandle) -> Result<String, ZetarisError> {
     let wallets = WALLETS.lock().unwrap();
     let wallet = wallets.get(&handle.id)
-        .ok_or(MeshcryptError::WalletNotFound)?;
+        .ok_or(ZetarisError::WalletNotFound)?;
     
     let wallet = wallet.lock().unwrap();
     
     let view_key = wallet.get_view_key()
-        .map_err(|_| MeshcryptError::KeyDerivationFailed)?;
+        .map_err(|_| ZetarisError::KeyDerivationFailed)?;
     
     Ok(hex::encode(view_key))
 }
@@ -309,12 +309,12 @@ pub fn export_view_key(handle: WalletHandle) -> Result<String, MeshcryptError> {
 pub fn import_private_key(
     private_key: String,
     password: String,
-) -> Result<WalletHandle, MeshcryptError> {
+) -> Result<WalletHandle, ZetarisError> {
     let key_bytes = hex::decode(private_key)
-        .map_err(|_| MeshcryptError::InvalidPassword)?;
+        .map_err(|_| ZetarisError::InvalidPassword)?;
     
-    let wallet = MeshcryptWallet::from_private_key(&key_bytes, &password)
-        .map_err(|_| MeshcryptError::InvalidPassword)?;
+    let wallet = ZetarisWallet::from_private_key(&key_bytes, &password)
+        .map_err(|_| ZetarisError::InvalidPassword)?;
     
     let mut next_id = NEXT_ID.lock().unwrap();
     let id = *next_id;

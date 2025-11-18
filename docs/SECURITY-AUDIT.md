@@ -1,4 +1,4 @@
-# MeshCrypt Security Audit Checklist
+# Zetaris Security Audit Checklist
 
 Comprehensive security checklist for pre-launch audit.
 

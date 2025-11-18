@@ -9,7 +9,7 @@ export default function Header() {
         <View style={styles.logo}>
           <Ionicons name="lock-closed" size={24} color="#ffffff" />
         </View>
-        <Text style={styles.title}>Meshcrypt</Text>
+        <Text style={styles.title}>Zetaris</Text>
       </View>
 
       <View style={styles.right}>
