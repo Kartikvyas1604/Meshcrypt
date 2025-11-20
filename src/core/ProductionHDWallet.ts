@@ -1,8 +1,61 @@
 import * as bip39 from 'bip39';
 import { BIP32Factory, BIP32Interface } from 'bip32';
-import * as ecc from 'tiny-secp256k1';
+import * as secp256k1 from '@noble/secp256k1';
 import { ethers } from 'ethers';
 import * as logger from '../utils/logger';
+
+// Create ECC adapter for BIP32 using @noble/secp256k1
+const ecc = {
+  isPoint: (p: Uint8Array): boolean => {
+    try {
+      secp256k1.Point.fromHex(p);
+      return true;
+    } catch {
+      return false;
+    }
+  },
+  isPrivate: (d: Uint8Array): boolean => {
+    return secp256k1.utils.isValidPrivateKey(d);
+  },
+  pointFromScalar: (d: Uint8Array, compressed?: boolean): Uint8Array | null => {
+    try {
+      const point = secp256k1.Point.fromPrivateKey(d);
+      return point.toRawBytes(compressed);
+    } catch {
+      return null;
+    }
+  },
+  pointAddScalar: (p: Uint8Array, tweak: Uint8Array, compressed?: boolean): Uint8Array | null => {
+    try {
+      const point = secp256k1.Point.fromHex(p);
+      const tweakNum = BigInt('0x' + Buffer.from(tweak).toString('hex'));
+      const tweakPoint = secp256k1.Point.fromPrivateKey(tweakNum);
+      return point.add(tweakPoint).toRawBytes(compressed);
+    } catch {
+      return null;
+    }
+  },
+  privateAdd: (d: Uint8Array, tweak: Uint8Array): Uint8Array | null => {
+    try {
+      const dNum = BigInt('0x' + Buffer.from(d).toString('hex'));
+      const tweakNum = BigInt('0x' + Buffer.from(tweak).toString('hex'));
+      const result = (dNum + tweakNum) % secp256k1.CURVE.n;
+      return Buffer.from(result.toString(16).padStart(64, '0'), 'hex');
+    } catch {
+      return null;
+    }
+  },
+  sign: (h: Uint8Array, d: Uint8Array): Uint8Array => {
+    return secp256k1.signSync(h, d);
+  },
+  verify: (h: Uint8Array, Q: Uint8Array, signature: Uint8Array): boolean => {
+    try {
+      return secp256k1.verify(signature, h, Q);
+    } catch {
+      return false;
+    }
+  },
+};
 
 const bip32 = BIP32Factory(ecc);
 
