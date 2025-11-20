@@ -222,15 +222,15 @@ export default function WalletScreen() {
   };
 
   const handleSend = () => {
-    navigation.navigate('Send');
+    (navigation as any).navigate('Send');
   };
 
   const handleReceive = () => {
-    navigation.navigate('Receive');
+    (navigation as any).navigate('Receive');
   };
 
   const handleSwap = () => {
-    navigation.navigate('Swap');
+    (navigation as any).navigate('Swap');
   };
 
   const handleNFCPay = () => {

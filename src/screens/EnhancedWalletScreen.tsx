@@ -170,7 +170,7 @@ const EnhancedWalletScreen: React.FC<Props> = ({ navigation }) => {
         <View style={styles.actionsContainer}>
           <TouchableOpacity
             style={styles.actionButton}
-            onPress={() => navigation.navigate('Send')}
+            onPress={() => (navigation as any).navigate('Send')}
           >
             <Text style={styles.actionIcon}>↑</Text>
             <Text style={styles.actionText}>Send</Text>
@@ -178,15 +178,15 @@ const EnhancedWalletScreen: React.FC<Props> = ({ navigation }) => {
           
           <TouchableOpacity
             style={styles.actionButton}
-            onPress={() => navigation.navigate('Receive')}
+            onPress={() => (navigation as any).navigate('Receive')}
           >
             <Text style={styles.actionIcon}>↓</Text>
             <Text style={styles.actionText}>Receive</Text>
           </TouchableOpacity>
-          
+
           <TouchableOpacity
             style={styles.actionButton}
-            onPress={() => navigation.navigate('Swap')}
+            onPress={() => (navigation as any).navigate('Swap')}
           >
             <Text style={styles.actionIcon}>⇄</Text>
             <Text style={styles.actionText}>Swap</Text>

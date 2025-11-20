@@ -317,28 +317,28 @@ const ZetarisWallet: React.FC<Props> = ({ navigation }) => {
 
         {/* Action Buttons */}
         <View style={styles.actionsGrid}>
-          <TouchableOpacity style={styles.actionButton} onPress={() => navigation.navigate('RealSend')}>
+          <TouchableOpacity style={styles.actionButton} onPress={() => (navigation as any).navigate('RealSend')}>
             <LinearGradient colors={['#A855F7', '#9333EA']} style={styles.actionGradient}>
               <Text style={styles.actionIcon}>🚀</Text>
             </LinearGradient>
             <Text style={styles.actionLabel}>Send</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.actionButton} onPress={() => navigation.navigate('RealReceive')}>
+          <TouchableOpacity style={styles.actionButton} onPress={() => (navigation as any).navigate('RealReceive')}>
             <LinearGradient colors={['#10B981', '#059669']} style={styles.actionGradient}>
               <Text style={styles.actionIcon}>📥</Text>
             </LinearGradient>
             <Text style={styles.actionLabel}>Receive</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.actionButton} onPress={() => navigation.navigate('SwapScreen')}>
-            <LinearGradient colors={['#3B82F6', '#2563EB']} style={styles.actionGradient}>
+          <TouchableOpacity style={styles.actionButton} onPress={() => (navigation as any).navigate('SwapScreen')}>
+            <LinearGradient colors={['#F59E0B', '#D97706']} style={styles.actionGradient}>
               <Text style={styles.actionIcon}>🔄</Text>
             </LinearGradient>
             <Text style={styles.actionLabel}>Swap</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.actionButton} onPress={() => navigation.navigate('NFCPay')}>
+          <TouchableOpacity style={styles.actionButton} onPress={() => (navigation as any).navigate('NFCPay')}>
             <LinearGradient colors={['#F59E0B', '#D97706']} style={styles.actionGradient}>
               <Text style={styles.actionIcon}>📱</Text>
             </LinearGradient>
@@ -747,10 +747,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-  },
-  privacyLabel: {
-    color: '#9CA3AF',
-    fontSize: 14,
   },
   privacyStatus: {
     color: '#10B981',
