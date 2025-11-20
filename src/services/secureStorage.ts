@@ -18,7 +18,8 @@ import { Platform } from 'react-native';
 import { pbkdf2 } from '@noble/hashes/pbkdf2';
 import { randomBytes as nobleRandomBytes } from '@noble/hashes/utils';
 import { sha256 } from '@noble/hashes/sha256';
-import crypto from 'crypto';
+// Use react-native-quick-crypto polyfill
+const crypto = require('crypto');
 import { CryptoUtils } from '../utils/crypto';
 
 // Storage keys

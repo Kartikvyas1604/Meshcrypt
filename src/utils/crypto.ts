@@ -1,17 +1,17 @@
-import { createHash, randomBytes, createCipheriv, createDecipheriv } from 'crypto';
+// Use react-native-quick-crypto polyfill
+const crypto = require('crypto');
 
 export class CryptoUtils {
   static hash(data: Uint8Array | Buffer, algorithm: string = 'sha256'): Buffer {
-    return createHash(algorithm).update(data).digest();
+    return crypto.createHash(algorithm).update(data).digest();
   }
 
   static randomBytes(length: number): Uint8Array {
-    return new Uint8Array(randomBytes(length));
+    return new Uint8Array(crypto.randomBytes(length));
   }
 
   static async pbkdf2(password: string, salt: Uint8Array, iterations: number, keyLength: number): Promise<Uint8Array> {
     return new Promise((resolve, reject) => {
-      const crypto = require('crypto');
       crypto.pbkdf2(password, Buffer.from(salt), iterations, keyLength, 'sha512', (err: Error | null, derivedKey: Buffer) => {
         if (err) reject(err);
         else resolve(new Uint8Array(derivedKey));
@@ -20,7 +20,7 @@ export class CryptoUtils {
   }
 
   static encrypt(data: Uint8Array, key: Uint8Array, iv: Uint8Array): Uint8Array {
-    const cipher = createCipheriv('aes-256-gcm', Buffer.from(key), Buffer.from(iv));
+    const cipher = crypto.createCipheriv('aes-256-gcm', Buffer.from(key), Buffer.from(iv));
     const encrypted = Buffer.concat([cipher.update(Buffer.from(data)), cipher.final()]);
     const authTag = cipher.getAuthTag();
     return new Uint8Array(Buffer.concat([encrypted, authTag]));
@@ -31,7 +31,7 @@ export class CryptoUtils {
     const authTag = data.slice(-16);
     const encrypted = data.slice(0, -16);
     
-    const decipher = createDecipheriv('aes-256-gcm', Buffer.from(key), Buffer.from(iv));
+    const decipher = crypto.createDecipheriv('aes-256-gcm', Buffer.from(key), Buffer.from(iv));
     decipher.setAuthTag(authTag);
     
     const decrypted = Buffer.concat([decipher.update(encrypted), decipher.final()]);

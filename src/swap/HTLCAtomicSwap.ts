@@ -1,6 +1,7 @@
 import { ethers } from 'ethers';
 import * as logger from '../utils/logger';
-import crypto from 'crypto';
+// Use react-native-quick-crypto polyfill
+const crypto = require('crypto');
 
 export interface HTLCParams {
   sender: string;
