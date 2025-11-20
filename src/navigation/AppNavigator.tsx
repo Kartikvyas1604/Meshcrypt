@@ -7,11 +7,10 @@
 import React, { useEffect, useState } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import CipherMeshWallet from '../screens/ZetarisWallet';
-import EnhancedWalletScreen from '../screens/EnhancedWalletScreen';
+import ProductionWalletScreen from '../screens/ProductionWalletScreen';
 import RealSendScreen from '../screens/RealSendScreen';
 import RealReceiveScreen from '../screens/RealReceiveScreen';
-import SwapScreen from '../screens/SwapScreen';
+import RealSwapScreen from '../screens/RealSwapScreen';
 import WalletSetupScreen from '../screens/WalletSetupScreen';
 import CreateWalletScreen from '../screens/CreateWalletScreen';
 import VerifySeedPhraseScreen from '../screens/VerifySeedPhraseScreen';
@@ -28,13 +27,9 @@ export type RootStackParamList = {
   ImportWallet: undefined;
   ImportPrivateKey: undefined;
   Wallet: undefined;
-  RealSend: undefined;
-  RealReceive: undefined;
-  SwapScreen: undefined;
-  NFCPay: undefined;
-  Send: undefined;
-  Receive: undefined;
-  Swap: undefined;
+  RealSend: { walletAddress: string; balances: any[] };
+  RealReceive: { walletAddress: string };
+  RealSwap: { walletAddress: string; balances: any[] };
   Bridge: undefined;
   MeshNetwork: undefined;
   Settings: undefined;
@@ -77,14 +72,11 @@ export default function AppNavigator() {
       <Stack.Screen name="ImportWallet" component={ImportWalletScreen} />
       <Stack.Screen name="ImportPrivateKey" component={ImportPrivateKeyScreen} />
       
-      {/* Main Wallet Screens */}
-      <Stack.Screen name="Wallet" component={CipherMeshWallet} />
+      {/* Main Wallet Screens - PRODUCTION */}
+      <Stack.Screen name="Wallet" component={ProductionWalletScreen} />
       <Stack.Screen name="RealSend" component={RealSendScreen} />
       <Stack.Screen name="RealReceive" component={RealReceiveScreen} />
-      <Stack.Screen name="SwapScreen" component={SwapScreen} />
-      <Stack.Screen name="Send" component={RealSendScreen} />
-      <Stack.Screen name="Receive" component={RealReceiveScreen} />
-      <Stack.Screen name="Swap" component={SwapScreen} />
+      <Stack.Screen name="RealSwap" component={RealSwapScreen} />
       <Stack.Screen name="Bridge" component={BridgeScreen} />
       <Stack.Screen name="MeshNetwork" component={MeshNetworkScreen} />
       <Stack.Screen name="Settings" component={SettingsScreen} />
